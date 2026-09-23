@@ -105,7 +105,7 @@ public:
         length = cards.length();
     }
 
-    //將一段連續牌彈出成字串，默認彈出1張牌，選項為'f'表示從牌組前面彈出，'b'表示從牌組後面彈出
+    //將一段連續牌彈出成字串，並從原牌組移除，默認彈出1張牌，選項為'f'表示從牌組前面彈出，'b'表示從牌組後面彈出
     string pop(int count = 1, char option = 'f') {
         if (count > length) {
             cout << "Warning: Not enough cards to pop." << endl;
@@ -168,63 +168,77 @@ public:
         else cout << "All dora indicators are already opened." << endl;
     }
 
+    //從主牌山中彈出指定數量的牌，默認彈出1張牌，選項為'f'表示從牌組前面彈出，'b'表示從牌組後面彈出
+    string pop(int count = 1) {
+        return main.pop(count, 'f');
+    }
 };
 
 
+//建立一個Player類別，包含玩家的位置、分數、狀態以及手牌。該類別提供了初始化玩家、抽牌、檢查長槓、操作檢查、丟牌以及各種操作（吃、碰、槓、長槓、立直、自摸）的功能。
 class Player{
 public:
-    int pos;
-    int point;
-    int status;
-    vector<char> Hand;
+    int position;  //玩家位置
+    int point;  //點棒數量
+    int status;  //玩家狀態
+    CardSet Hand;  //玩家手牌
 
+    //建構函數，初始化玩家的位置、分數和狀態
     void __init__(int _pos, int _point=35000, int _status=0){
-        pos = _pos;
+        position = _pos;
         point = _point;
         status = _status;
     }
 
-    void take(CardSet &mountain){
-        Hand.push_back(mountain.cards[0]);
-        mountain.pop();
+    //抽牌，從牌山中抽取指定數量的牌，默認抽取1張牌，並將抽取的牌添加到手牌中
+    void take(CardMountain &mountain, int count=1){
+        Hand.add(mountain.pop(count), 'b');
     }
+
     void takecheck(){
         /*
         check long kang
         */
     }
+
     void operationcheck(){
         /*
         check long chi pong kang
         */
-        }
+    }
+
+    //丟牌
     void throwcard(){
-        cout<<"Throw a card, type the place!";
+        cout<<"Throw a card, type the alphabet!";
         char input;
         cin >> input;
-        while(input<1 || input>14){
-            cout<<"f**k type 1~14 u gay!";
-            cin>>input;
+        if (Hand.cards.find(input) != string::npos) {
+            Hand.remove(input);
+            cout << "You threw: " << input << endl;
         }
-
-        
-
+        else cout << "You don't have that card in your hand." << endl;
     }
+
     void chi(){
 
     }
+
     void pong(){
 
     }
+
     void kang(){
 
     }
+
     void long_nia(){
 
     }
+
     void reach(){
 
     }
+
     void tsumou(){
 
     }
@@ -238,61 +252,28 @@ public:
 
 };
 
-
-void distribute(CardMountain &moutain , vector<char> &v1 ,  vector<char> &v2  , vector<char> &v3 ,  vector<char> &v4){
-    for(int i=0;i<13;i++){
-        v1.push_back(moutain.main.cards[i]);
-        moutain.main.pop();
+//將牌山中的牌分配給玩家，每位玩家獲得13張牌，並對手牌進行排序
+void distribute(CardMountain &mountain , vector<Player> &players){
+    for(int i = 0; i < players.size(); i++){
+        players[i].take(mountain, 13);
+        players[i].Hand.sort();
     }
-    for(int i=13;i<26;i++){
-        v2.push_back(moutain.main.cards[i]);
-        moutain.main.pop();
-    }
-    for(int i=26;i<39;i++){
-        v3.push_back(moutain.main.cards[i]);
-        moutain.main.pop();
-    }
-    for(int i=39;i<52;i++){
-        v4.push_back(moutain.main.cards[i]);
-        moutain.main.pop();
-    }
-    sort(v1.begin(),v1.end());
-    sort(v2.begin(),v2.end());
-    sort(v3.begin(),v3.end());
-    sort(v4.begin(),v4.end());
 }
 
 int main() {
     CardMountain mountain;
-    //mountain.main.print();
-    //mountain.dora.print();
-    //mountain.ura_dora.print();
-    Player player1;
-    Player player2;
-    Player player3;
-    Player player4;
-    distribute(mountain , player1.Hand , player2.Hand , player3.Hand , player4.Hand);
+    cout<<"original mountain:";
+    mountain.main.print();
+    cout<<"Enter the number of players: ";
+    int num_players;
+    cin>>num_players;
+    vector<Player> players(num_players);
+    distribute(mountain, players);
     
-    cout<<"player1's handcard"<<":";
-    for(int i=0;i<13;i++){
-        cout<<player1.Hand[i];
+    for(int i = 0; i < num_players; i++){
+        cout<<"Player "<<i+1<<"'s hand: ";
+        players[i].Hand.print();
     }
-    cout<<'\n';
-    cout<<"player2's handcard"<<":";
-    for(int i=0;i<13;i++){
-        cout<<player2.Hand[i];
-    }
-    cout<<'\n';
-    cout<<"player3's handcard"<<":";
-    for(int i=0;i<13;i++){
-        cout<<player3.Hand[i];
-    }
-    cout<<'\n';
-    cout<<"player4's handcard"<<":";
-    for(int i=0;i<13;i++){
-        cout<<player4.Hand[i];
-    }
-    cout<<'\n';
     cout<<"mountain:";
     mountain.main.print();
     cout<<"dora:";
