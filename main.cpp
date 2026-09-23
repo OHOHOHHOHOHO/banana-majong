@@ -325,11 +325,53 @@ public:
     }
 
     bool tsumouable() {
+    
+        int oc[26]={0};
+        for(int i =0; i <14; i++)
+            oc[int(hand.cards[i]-'A')]++;
+
+        int ch[26];        
+        for(int i =0; i <26; i++){
+            int group=0;
+            for(int k=0; k<26; k++)
+                ch[k]=oc[k];
+            if(ch[i]>=2){
+                ch[i]-=2;
+                group++;
+                for(int j=0;j<26;j++){
+                    while(ch[j]>=3){
+                        ch[j]-=3;
+                        group++;
+                    }
+                }
+                for(int j=0;j<24;j++){
+                    while(ch[j]!=0){
+                        if(ch[j]*ch[j+1]*ch[j+2]!=0){
+                            ch[j]--;
+                            ch[j+1]--;
+                            ch[j+2]--;
+                            group++;
+                        }
+                        else
+                            break;
+                    }
+                }
+                if(group==5){
+                    return true;
+                }
+            }
+        }
+    
+        int pair7=0;
+        for(int i=0; i<26; i++){
+            if(oc[i]==2)
+                pair7++;
+        }
+        if(pair7==7)
+            return true;
         return false;
     }
-
-    };
-
+};
 
 
 class GameManager {
