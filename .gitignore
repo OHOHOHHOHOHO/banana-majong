@@ -1,4 +1,5 @@
 .vscode
 w64devkit/
 *.exe
-main.cs
+*.cs
+*.o

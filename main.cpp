@@ -2,6 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include <string>
+#include <utility>
 using namespace std;
 
 
@@ -44,10 +46,14 @@ private:
                 if (c == target_string[0] && (count > 0 || remove_all)) count--;
                 else result += c;
             }
-            if (count > 0 && !remove_all) cout << "Warning: Not enough " << target_string[0] << " to remove." << endl;
+            if (count > 0 && !remove_all) {
+                cout << "Warning: Not enough " << target_string[0] << " to remove." << endl;
+            }
             original_string = result;
         }
-        else cout << "Invalid option parameter for mod_cards." << endl;
+        else {
+            cout << "Invalid option parameter for mod_cards." << endl;
+        }
         return original_string;
     }
 public:
@@ -176,120 +182,210 @@ public:
 
 
 //建立一個Player類別，包含玩家的位置、分數、狀態以及手牌。該類別提供了初始化玩家、抽牌、檢查長槓、操作檢查、丟牌以及各種操作（吃、碰、槓、長槓、立直、自摸）的功能。
-class Player{
+class Player {
 public:
-    int position;  //玩家位置
-    int point;  //點棒數量
-    int status;  //玩家狀態
-    CardSet hand;  //玩家手牌
-    vector<pair<CardSet, int>> fuuro;  //玩家副露(含吃、碰、槓)的牌組及其餵牌玩家位置
-    CardSet river;  //玩家牌河
-    bool is_riichi;  //是否立直
+    string name;
+    int position;
+    int point;
+    int status;  // 0 = Menzenchin, 1 = Reach, 2 = Exposed
 
-    //建構函數，初始化玩家的位置、分數和狀態
-    void __init__(int _pos, int _point=35000, int _status=0){
-        position = _pos;
+    CardSet hand;
+    vector<pair<CardSet, int>> fuuro;  // 副露牌組 + 餵牌玩家位置
+    CardSet river;                     // 牌河
+    bool is_riichi;
+
+    Player(string _name = "", int _position = 0, int _point = 35000, int _status = 0) {
+        name = _name;
+        position = _position;
         point = _point;
         status = _status;
         is_riichi = false;
     }
 
-    //抽牌，從牌山中抽取指定數量的牌，默認抽取1張牌，並將抽取的牌添加到手牌中
-    void take(CardMountain &mountain, int count=1){
+    void initialization(CardMountain &mountain) {
+        take(mountain, 13);
+        hand.sort();
+    }
+
+    void display_hand() {
+        cout << name << "'s hand:\n";
+        hand.print();
+    }
+
+    void take(CardMountain &mountain, int count = 1) {
         hand.add(mountain.pop(count), 'b');
     }
 
-    void takecheck(){
-        /*
-        check long kang
-        */
-    }
+    void selfcheck() {
+        string message = "";
 
-    void operationcheck(){
-        /*
-        吃 碰 槓 立直 和 檢查
-        */
-    }
+        bool tsumou = tsumouable();
+        bool kang = kangable();
+        bool reach = reachable();
 
-    //丟牌
-    void throwcard(){
-        cout<<"Throw a card, type the alphabet!";
+        if (tsumou) {
+            message += (message == "" ? "tsumou" : ", tsumou");
+        }
+
+        if (kang) {
+            message += (message == "" ? "kang" : ", kang");
+        }
+
+        if (reach) {
+            message += (message == "" ? "reach" : ", reach");
+        }
+
+        if (message == "") {
+            cout << "You can only discard a card. Good luck!\n";
+        }
+        else {
+            cout << "You can " << message
+                << ", or discard a card. Let's Go!\n";
+        }
+
+        cout << '\n';
+
+        cout << "Please input what you want to do? "
+            << "(tsumou->t, kang->k, reach->r, discard->d): ";
+
         char input;
         cin >> input;
+
+        while (input != 't' && input != 'k' && input != 'r' && input != 'd') {
+            cout << "Invalid action! Please try again: ";
+            cin >> input;
+        }
+
+        // TODO: 根據 input 執行對應操作
+    }
+
+    void operationcheck() {
+        /*
+            check:
+            吃
+            碰
+            槓
+            立直
+            和
+        */
+    }
+
+    void throwcard() {
+        cout << "Throw a card, type the alphabet: ";
+
+        char input;
+        cin >> input;
+
         if (hand.cards.find(input) != string::npos) {
             hand.remove(input);
+            river.add(input, 'b');
             cout << "You threw: " << input << endl;
         }
-        else cout << "You don't have that card in your hand." << endl;
-        river.add(input, 'b');
+        else {
+            cout << "You don't have that card in your hand." << endl;
+        }
     }
 
-    void chii(){
-
+    void chii() {
     }
 
-    void pon(){
-
+    void pon() {
     }
 
-    void kan(){
-
+    void kan() {
     }
 
-    void ron_nya(){
-
+    void ron_nya() {
     }
 
-    void riichi(){
-
+    void riichi() {
     }
 
-    void tsumo(){
-
+    void tsumo() {
     }
-};
+
+    bool chiable() {
+        return false;
+    }
+
+    bool pongable() {
+        return false;
+    }
+
+    bool kangable() {
+        return false;
+    }
+
+    bool longable() {
+        return false;
+    }
+
+    bool reachable() {
+        return false;
+    }
+
+    bool tsumouable() {
+        return false;
+    }
+
+    };
 
 
-class manager{
+
+class GameManager {
 public:
-    int now;
+    int order = 1;
+    int stage = 0;
+    vector<Player> players;
 
-
-};
-
-//將牌山中的牌分配給玩家，每位玩家獲得13張牌，並對手牌進行排序
-void distribute(CardMountain &mountain , vector<Player> &players){
-    for(int i = 0; i < players.size(); i++){
-        players[i].take(mountain, 13);
-        players[i].hand.sort();
+    void distribute(CardMountain &mountain) {
+        for (auto &p : players) {
+            p.initialization(mountain);
+        }
     }
-}
+};
 
 int main() {
     CardMountain mountain;
-    cout<<"original mountain:";
+
+    cout << "original mountain: ";
     mountain.main.print();
-    cout<<"Enter the number of players: ";
+
+    cout << "Enter the number of players: ";
+
     int num_players;
     do {
         cin >> num_players;
+
         if (num_players < 2 || num_players > 6) {
-            cout << "Invalid number of players. Please enter a number between 2 and 6: ";
+            cout << "Invalid number of players. "
+                 << "Please enter a number between 2 and 6: ";
         }
     } while (num_players < 2 || num_players > 6);
-    vector<Player> players(num_players);
-    distribute(mountain, players);
-    
-    for(int i = 0; i < num_players; i++){
-        cout<<"Player "<<i+1<<"'s hand: ";
-        players[i].hand.print();
+
+    GameManager game;
+
+    for (int i = 0; i < num_players; i++) {
+        string name = "Player" + to_string(i + 1);
+        game.players.emplace_back(name, i + 1);
     }
-    cout<<"mountain: ";
+
+    game.distribute(mountain);
+
+    for (auto &p : game.players) {
+        p.display_hand();
+    }
+
+    cout << "mountain: ";
     mountain.main.print();
-    cout<<"dora: ";
+
+    cout << "dora: ";
     mountain.dora.print();
-    cout<<"ura_dora: ";
+
+    cout << "ura_dora: ";
     mountain.ura_dora.print();
-    
+
+    // TODO: 開始遊戲流程
+
     return 0;
 }
