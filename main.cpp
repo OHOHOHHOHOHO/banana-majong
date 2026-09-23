@@ -245,7 +245,7 @@ public:
         const string actions = "cpkrttd";
         const string actions_chinese[7] = {"吃", "碰", "槓", "立直", "自摸", "和", "丟牌"};
         bool is_action_available[7] = {chiiable(), ponable(), kanable(), reachable(), tsumouable(), ronable(), true};
-        
+
         string message = "";
         string available_actions = "";
 
@@ -408,6 +408,20 @@ public:
     }
 };
 
+
+int ask_num_of_player() {
+    int num;
+    do {
+        cin >> num;
+        if (num < 2 || num > 6) {
+            cout << "Invalid number of players. "
+                 << "Please enter a number between 2 and 6: ";
+        }
+    } while (num < 2 || num > 6);
+    return num;
+}
+
+
 int main() {
     CardMountain mountain;
 
@@ -415,16 +429,7 @@ int main() {
     mountain.main.print();
 
     cout << "Enter the number of players: ";
-
-    int num_players;
-    do {
-        cin >> num_players;
-
-        if (num_players < 2 || num_players > 6) {
-            cout << "Invalid number of players. "
-                 << "Please enter a number between 2 and 6: ";
-        }
-    } while (num_players < 2 || num_players > 6);
+    int num_players = ask_num_of_player();
 
     GameManager game;
 
