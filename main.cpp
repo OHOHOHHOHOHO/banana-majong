@@ -196,14 +196,17 @@ public:
     void selfcheck(){
         //check tsumou?, kang?, reach?
         string message = "";
-        
-        if(tsumouable()){
+        bool tsumou = tsumouable();
+        bool kang = kangable();
+        bool reach = reachable();
+
+        if(tsumou){
             message += (message==""? "tsumou" : ", tsumou");
         }
-        if(kangable()){
+        if(kang){
             message += (message==""? "kang" : ", kang");
         }
-        if(reachable()){
+        if(reach){
             message += (message==""? "reach" : ", reach");
         }
 
@@ -213,7 +216,14 @@ public:
         else {
             cout << "You can " << message << ", or discard a card. Let's Go!\n"; 
         }
-        
+        cout << '\n';
+        cout << "please input what you want to do?(tsumou->t, kang->k, reach->r, discard d)";
+        char input;
+        cin >> input;
+        while(input!='t'&&input!='k'&&input!='r'&&input!='d'){
+            cout << "Invalid action! Please try again";
+            cin >> input;
+        }
     }
     void operationcheck(){
         
