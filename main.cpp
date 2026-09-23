@@ -163,30 +163,62 @@ void move_cards(CardSet &from, CardSet &to, char option_from='f', char option_to
 
 class Player{
 public:
-    int pos;
-    int point;
-    int status;
-    vector<char> Hand;
+    string name;
+    int pos; // order-> 1, 2, 3, 4, 1, ...
+    int point = 35000;
+    int status = 0; // 0 -> Menzenchin, 1 -> Reach, 2 -> exposed
+    CardSet hand;
 
-    void __init__(int _pos, int _point=35000, int _status=0){
+    Player(string _name, int _pos){
+        name = _name;
         pos = _pos;
-        point = _point;
-        status = _status;
     }
 
-    void take(CardSet &mountain){
-        Hand.push_back(mountain.cards[0]);
-        mountain.pop();
+    void intialization(CardMountain &cardmountain){
+        hand.add(cardmountain.main.cards.substr(0, 13));
+        cardmountain.main.pop(13, 'f');
+        hand.sort();
     }
-    void takecheck(){
-        /*
-        check long kang
-        */
+
+    void display_hand(){
+        cout << name << "'s hand:\n";
+        cout << hand.cards << '\n';
+    }
+
+    void draw(CardSet &cardmountain){
+        hand.add(cardmountain.cards[0], 'b');
+        cardmountain.pop();
+        display_hand();
+        selfcheck();
+
+    }
+    
+    void selfcheck(){
+        //check tsumou?, kang?, reach?
+        string message = "";
+        
+        if(tsumouable()){
+            message += (message==""? "tsumou" : ", tsumou");
+        }
+        if(kangable()){
+            message += (message==""? "kang" : ", kang");
+        }
+        if(reachable()){
+            message += (message==""? "reach" : ", reach");
+        }
+
+        if(message==""){
+            cout << "You can only discard a card. Good luck!\n";
+        }
+        else {
+            cout << "You can " << message << ", or discard a card. Let's Go!\n"; 
+        }
+        
     }
     void operationcheck(){
-        /*
-        check long chi pong kang
-        */
+        
+        //check long chi pong kang
+        
         }
     void throwcard(){
         cout<<"Throw a card, type the place!";
@@ -200,89 +232,72 @@ public:
         
 
     }
-    void chi(){
-
+    bool chiable(){
+        return false;
     }
-    void pong(){
-
+    bool pongable(){
+        return false;
     }
-    void kang(){
-
+    bool kangable(){
+        return false;
     }
-    void long_nia(){
-
+    bool longable(){
+        return false;
     }
-    void reach(){
-
+    bool reachable(){
+        return false;
     }
-    void tsumou(){
-
+    bool tsumouable(){
+        return false;
     }
+
+
 };
 
 
-class manager{
+class GameManager{
 public:
-    int now;
+    int order=1;
+    int stage=0;
+    vector <Player> player;
+    
+    void __init__(Player &p1, Player &p2, Player &p3, Player &p4){
+        player.push_back(p1);
+        player.push_back(p2);
+        player.push_back(p3);
+        player.push_back(p4);
+    }
 
+    void distribute(CardMountain &cardmountain){
+        for (int i=0; i<player.size(); i++){
+            player[i].intialization(cardmountain); 
+        }
+    }
 
+    
 };
 
 
-void distribute(CardMountain &moutain , vector<char> &v1 ,  vector<char> &v2  , vector<char> &v3 ,  vector<char> &v4){
-    for(int i=0;i<13;i++){
-        v1.push_back(moutain.main.cards[i]);
-        moutain.main.pop();
-    }
-    for(int i=13;i<26;i++){
-        v2.push_back(moutain.main.cards[i]);
-        moutain.main.pop();
-    }
-    for(int i=26;i<39;i++){
-        v3.push_back(moutain.main.cards[i]);
-        moutain.main.pop();
-    }
-    for(int i=39;i<52;i++){
-        v4.push_back(moutain.main.cards[i]);
-        moutain.main.pop();
-    }
-    sort(v1.begin(),v1.end());
-    sort(v2.begin(),v2.end());
-    sort(v3.begin(),v3.end());
-    sort(v4.begin(),v4.end());
-}
 
 int main() {
     CardMountain mountain;
-    //mountain.main.print();
-    //mountain.dora.print();
-    //mountain.ura_dora.print();
-    Player player1;
-    Player player2;
-    Player player3;
-    Player player4;
-    distribute(mountain , player1.Hand , player2.Hand , player3.Hand , player4.Hand);
-    
-    cout<<"player1's handcard"<<":";
-    for(int i=0;i<13;i++){
-        cout<<player1.Hand[i];
+    mountain.main.print();
+    mountain.dora.print();
+    mountain.ura_dora.print();
+    Player p1("kleeplayer", 1);
+    Player p2("loliplayer", 2);
+    Player p3("fireflyplayer", 3);
+    Player p4("fubukiplayer", 4);
+    GameManager gamemanager;
+
+
+    gamemanager.__init__(p1, p2, p3, p4);
+    gamemanager.distribute(mountain);
+
+    for (int i=0; i<gamemanager.player.size(); i++){
+        gamemanager.player[i].display_hand();
     }
-    cout<<'\n';
-    cout<<"player2's handcard"<<":";
-    for(int i=0;i<13;i++){
-        cout<<player2.Hand[i];
-    }
-    cout<<'\n';
-    cout<<"player3's handcard"<<":";
-    for(int i=0;i<13;i++){
-        cout<<player3.Hand[i];
-    }
-    cout<<'\n';
-    cout<<"player4's handcard"<<":";
-    for(int i=0;i<13;i++){
-        cout<<player4.Hand[i];
-    }
-    cout<<'\n';
+
     cout<<"mountain:";
     mountain.main.print();
     cout<<"dora:";
@@ -290,5 +305,6 @@ int main() {
     cout<<"ura_dora:";
     mountain.ura_dora.print();
     
+    gamemanager.player[0].draw(mountain.main);
     return 0;
 }
