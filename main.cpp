@@ -5,7 +5,7 @@
 using namespace std;
 
 
-const vector<int> card_amount={13,3,3,6,18,3,4,3,12,2,2,5,3,8,11,3,2,9,6,9,6,3,3,2,3,2};  //牌的種類數量，對應於A~Z的26種牌，每種牌的數量不同
+const vector<int> card_amount={13,3,3,6,18,3,4,3,12,2,2,5,3,8,11,3,2,9,6,9,6,3,3,2,3,2};  //各種牌的數量
 const int card_type_count = card_amount.size();  //牌的種類數量，即card_amount的大小
 const int total_card_amount = []() {  //計算總牌數量，將card_amount中的所有數量相加
     int total = 0;
@@ -51,8 +51,8 @@ private:
         return original_string;
     }
 public:
-    int length;//牌組的長度
-    string cards;//牌組的內容
+    int length;  //牌組的長度
+    string cards;  //牌組的內容
 
     //建構函數，初始化牌組的長度和內容
     CardSet(string initial_cards="") {
@@ -181,18 +181,22 @@ public:
     int position;  //玩家位置
     int point;  //點棒數量
     int status;  //玩家狀態
-    CardSet Hand;  //玩家手牌
+    CardSet hand;  //玩家手牌
+    vector<pair<CardSet, int>> fuuro;  //玩家副露(含吃、碰、槓)的牌組及其餵牌玩家位置
+    CardSet river;  //玩家牌河
+    bool is_riichi;  //是否立直
 
     //建構函數，初始化玩家的位置、分數和狀態
     void __init__(int _pos, int _point=35000, int _status=0){
         position = _pos;
         point = _point;
         status = _status;
+        is_riichi = false;
     }
 
     //抽牌，從牌山中抽取指定數量的牌，默認抽取1張牌，並將抽取的牌添加到手牌中
     void take(CardMountain &mountain, int count=1){
-        Hand.add(mountain.pop(count), 'b');
+        hand.add(mountain.pop(count), 'b');
     }
 
     void takecheck(){
@@ -203,7 +207,7 @@ public:
 
     void operationcheck(){
         /*
-        check long chi pong kang
+        吃 碰 槓 立直 和 檢查
         */
     }
 
@@ -212,34 +216,35 @@ public:
         cout<<"Throw a card, type the alphabet!";
         char input;
         cin >> input;
-        if (Hand.cards.find(input) != string::npos) {
-            Hand.remove(input);
+        if (hand.cards.find(input) != string::npos) {
+            hand.remove(input);
             cout << "You threw: " << input << endl;
         }
         else cout << "You don't have that card in your hand." << endl;
+        river.add(input, 'b');
     }
 
-    void chi(){
-
-    }
-
-    void pong(){
+    void chii(){
 
     }
 
-    void kang(){
+    void pon(){
 
     }
 
-    void long_nia(){
+    void kan(){
 
     }
 
-    void reach(){
+    void ron_nya(){
 
     }
 
-    void tsumou(){
+    void riichi(){
+
+    }
+
+    void tsumo(){
 
     }
 };
@@ -256,7 +261,7 @@ public:
 void distribute(CardMountain &mountain , vector<Player> &players){
     for(int i = 0; i < players.size(); i++){
         players[i].take(mountain, 13);
-        players[i].Hand.sort();
+        players[i].hand.sort();
     }
 }
 
@@ -266,19 +271,24 @@ int main() {
     mountain.main.print();
     cout<<"Enter the number of players: ";
     int num_players;
-    cin>>num_players;
+    do {
+        cin >> num_players;
+        if (num_players < 2 || num_players > 6) {
+            cout << "Invalid number of players. Please enter a number between 2 and 6: ";
+        }
+    } while (num_players < 2 || num_players > 6);
     vector<Player> players(num_players);
     distribute(mountain, players);
     
     for(int i = 0; i < num_players; i++){
         cout<<"Player "<<i+1<<"'s hand: ";
-        players[i].Hand.print();
+        players[i].hand.print();
     }
-    cout<<"mountain:";
+    cout<<"mountain: ";
     mountain.main.print();
-    cout<<"dora:";
+    cout<<"dora: ";
     mountain.dora.print();
-    cout<<"ura_dora:";
+    cout<<"ura_dora: ";
     mountain.ura_dora.print();
     
     return 0;
