@@ -175,8 +175,8 @@ public:
     }
 
     //從主牌山中彈出指定數量的牌，默認彈出1張牌，選項為'f'表示從牌組前面彈出，'b'表示從牌組後面彈出
-    string pop(int count = 1) {
-        return main.pop(count, 'f');
+    string pop(int count = 1, char option = 'f') {
+        return main.pop(count, option);
     }
 };
 
@@ -217,14 +217,12 @@ public:
     CardSet hand;
     vector<pair<CardSet, int>> fuuro;  // 副露牌組 + 餵牌玩家位置
     CardSet river;                     // 牌河
-    bool is_riichi;
 
     Player(string _name = "", int _position = 0, int _point = 35000, int _status = 0) {
         name = _name;
         position = _position;
         point = _point;
         status = _status;
-        is_riichi = false;
     }
 
     void initialization(CardMountain &mountain) {
