@@ -183,6 +183,31 @@ public:
 
 //建立一個Player類別，包含玩家的位置、分數、狀態以及手牌。該類別提供了初始化玩家、抽牌、檢查長槓、操作檢查、丟牌以及各種操作（吃、碰、槓、長槓、立直、自摸）的功能。
 class Player {
+private:
+    void execute_operation(char operation) {
+        switch (operation) {
+            case 'c':
+                chii();
+                break;
+            case 'p':
+                pon();
+                break;
+            case 'k':
+                kan();
+                break;
+            case 'r':
+                reach();
+                break;
+            case 't':
+                tsumo();
+                break;
+            case 'd':
+                throw_card();
+                break;
+            default:
+                cout << "Invalid operation while choosing action." << endl;
+        }
+    }
 public:
     string name;
     int position;
@@ -216,23 +241,46 @@ public:
         hand.add(mountain.pop(count), 'b');
     }
 
-    void selfcheck() {
+    void operation_choose() {
         string message = "";
+        const string all_actions = "cpkrtd";  // 合法的操作字母
+        string available_actions = "d";  // 丟牌是必須的，所以預設為可用
 
-        bool tsumou = tsumouable();
-        bool kang = kangable();
+        bool chii = chiiable();
+        bool pon = ponable();
+        bool kan = kanable();
         bool reach = reachable();
+        bool tsumou = tsumouable();
+        bool ron = ronable();
 
-        if (tsumou) {
-            message += (message == "" ? "tsumou" : ", tsumou");
+        if (chii) {
+            message += (message == "" ? "吃" : ", 吃");
+            available_actions += "c";
         }
 
-        if (kang) {
-            message += (message == "" ? "kang" : ", kang");
+        if (pon) {
+            message += (message == "" ? "碰" : ", 碰");
+            available_actions += "p";
+        }
+
+        if (kan) {
+            message += (message == "" ? "槓" : ", 槓");
+            available_actions += "k";
         }
 
         if (reach) {
-            message += (message == "" ? "reach" : ", reach");
+            message += (message == "" ? "立直" : ", 立直");
+            available_actions += "r";
+        }
+
+        if (tsumou) {
+            message += (message == "" ? "自摸" : ", 自摸");
+            available_actions += "t";
+        }
+
+        if (ron) {
+            message += (message == "" ? "和" : ", 和");
+            available_actions += "t";
         }
 
         if (message == "") {
@@ -246,20 +294,26 @@ public:
         cout << '\n';
 
         cout << "Please input what you want to do? "
-            << "(tsumou->t, kang->k, reach->r, discard->d): ";
+            << "(吃->c, 碰->p, 槓->k, 立直->r, 自摸/和->t, 丟牌->d): ";
 
         char input;
-        cin >> input;
-
-        while (input != 't' && input != 'k' && input != 'r' && input != 'd') {
-            cout << "Invalid action! Please try again: ";
+        do {
             cin >> input;
-        }
+            if (all_actions.find(input) == string::npos) {
+                cout << "Invalid action! Please try again: ";
+            }
+            else if (available_actions.find(input) == string::npos) {
+                cout << "You cannot do that action! Please try again: ";
+            }
+            else {
+                break;
+            }
+        } while (true);
 
-        // TODO: 根據 input 執行對應操作
+        execute_operation(input);
     }
 
-    void operationcheck() {
+    void operation_check() {
         /*
             check:
             吃
@@ -270,7 +324,7 @@ public:
         */
     }
 
-    void throwcard() {
+    void throw_card() {
         cout << "Throw a card, type the alphabet: ";
 
         char input;
@@ -298,25 +352,25 @@ public:
     void ron_nya() {
     }
 
-    void riichi() {
+    void reach() {
     }
 
     void tsumo() {
     }
 
-    bool chiable() {
+    bool chiiable() {
         return false;
     }
 
-    bool pongable() {
+    bool ponable() {
         return false;
     }
 
-    bool kangable() {
+    bool kanable() {
         return false;
     }
 
-    bool longable() {
+    bool ronable() {
         return false;
     }
 
