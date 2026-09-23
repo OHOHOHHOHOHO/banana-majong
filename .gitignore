@@ -1,0 +1,4 @@
+.vscode
+w64devkit/
+*.exe
+main.cs
