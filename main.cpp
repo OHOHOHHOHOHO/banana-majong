@@ -13,14 +13,14 @@
 using namespace std;
 
 
-const vector<int> card_amount={13,3,3,6,18,3,4,3,12,2,2,5,3,8,11,3,2,9,6,9,6,3,3,2,3,2};  //各種牌的數量
-const int card_type_count = card_amount.size();  //牌的種類數量，即card_amount的大小
-const int total_card_amount = []() {  //計算總牌數量，將card_amount中的所有數量相加
+const vector<int> card_amount={13,3,3,6,18,3,4,3,12,2,2,5,3,8,11,3,2,9,6,9,6,3,3,2,3,2};  // 各種牌的數量
+const int card_type_count = card_amount.size();       // 牌的種類數量，即card_amount的大小
+const int total_card_amount = []() {                  // 計算總牌數量，將card_amount中的所有數量相加
     int total = 0;
     for (auto i : card_amount) total += i;
     return total;
 }();
-const string original_mountain = []() {  //建立原始牌山，將每種牌按照其數量依次添加到牌山中
+const string original_mountain = []() {               // 建立原始牌山，將每種牌按照其數量依次添加到牌山中
     string mountain = "";
     for (int i = 0; i < card_type_count; i++) {
         mountain += string(card_amount[i], 'A' + i);
@@ -29,7 +29,7 @@ const string original_mountain = []() {  //建立原始牌山，將每種牌按�
 }();
 
 
-int ask_num_of_player() {
+int ask_num_of_player() {                             // 詢問遊戲人數
     int num;
     do {
         cin >> num;
