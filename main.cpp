@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "CardSet.h"
+#include "CardMountain.h"
 
 using namespace std;
 
@@ -24,50 +25,6 @@ const string original_mountain = []() {  //建立原始牌山，將每種牌按�
     }
     return mountain;
 }();
-
-
-//建立一個CardMountain類別，包含主要的牌山、寶牌指示牌、裡寶指示牌以及已開啟的寶牌指示牌數。該類別提供了重新生成牌山、獲取寶牌和裡寶指示牌以及開啟寶牌指示牌的功能。
-class CardMountain {
-public:
-    CardSet main;  //主牌山
-    CardSet dora;  //寶牌指示牌
-    CardSet ura_dora;  //裡寶指示牌
-    int opened_dora_count;  //已開啟的寶牌指示牌數
-
-    //建構函數
-    CardMountain() {
-        regenerate();
-    }
-
-    //重生牌山，洗牌後將後5張牌分別設置為寶牌指示牌和裡寶指示牌，並將已開啟的寶牌指示牌數設置為1
-    void regenerate() {
-        main.set(original_mountain);
-        main.shuffle();
-        ura_dora = CardSet(main.pop(5, 'b'));
-        dora= CardSet(main.pop(5, 'b'));
-        opened_dora_count = 1;
-    }
-
-    //獲取已開啟的寶牌指示牌
-    string get_dora() {
-        return dora.cards.substr(0, opened_dora_count);
-    }
-    //獲取已開啟的裡寶指示牌
-    string get_ura_dora() {
-        return ura_dora.cards.substr(0, opened_dora_count);
-    }
-
-    //開啟寶牌指示牌，最多可以開啟5張
-    void open_dora(int count=1) {
-        if (opened_dora_count < 5) opened_dora_count += count;
-        else cout << "All dora indicators are already opened." << endl;
-    }
-
-    //從主牌山中彈出指定數量的牌，默認彈出1張牌，選項為'f'表示從牌組前面彈出，'b'表示從牌組後面彈出
-    string pop(int count = 1, char option = 'f') {
-        return main.pop(count, option);
-    }
-};
 
 
 //建立一個Player類別，包含玩家的位置、分數、狀態以及手牌。該類別提供了初始化玩家、抽牌、檢查長槓、操作檢查、丟牌以及各種操作（吃、碰、槓、長槓、立直、自摸）的功能。
