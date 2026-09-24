@@ -175,14 +175,39 @@ public:
     }
 
     //從主牌山中彈出指定數量的牌，默認彈出1張牌，選項為'f'表示從牌組前面彈出，'b'表示從牌組後面彈出
-    string pop(int count = 1) {
-        return main.pop(count, 'f');
+    string pop(int count = 1, char option = 'f') {
+        return main.pop(count, option);
     }
 };
 
 
 //建立一個Player類別，包含玩家的位置、分數、狀態以及手牌。該類別提供了初始化玩家、抽牌、檢查長槓、操作檢查、丟牌以及各種操作（吃、碰、槓、長槓、立直、自摸）的功能。
 class Player {
+private:
+    void execute_action(char action) {
+        switch (action) {
+            case 'c':
+                chii();
+                break;
+            case 'p':
+                pon();
+                break;
+            case 'k':
+                kan();
+                break;
+            case 'r':
+                reach();
+                break;
+            case 't':
+                tsumo();
+                break;
+            case 'd':
+                throw_card();
+                break;
+            default:
+                cout << "Invalid operation while choosing action." << endl;
+        }
+    }
 public:
     string name;
     int position;
@@ -192,14 +217,12 @@ public:
     CardSet hand;
     vector<pair<CardSet, int>> fuuro;  // 副露牌組 + 餵牌玩家位置
     CardSet river;                     // 牌河
-    bool is_riichi;
 
     Player(string _name = "", int _position = 0, int _point = 35000, int _status = 0) {
         name = _name;
         position = _position;
         point = _point;
         status = _status;
-        is_riichi = false;
     }
 
     void initialization(CardMountain &mountain) {
@@ -216,50 +239,43 @@ public:
         hand.add(mountain.pop(count), 'b');
     }
 
-    void selfcheck() {
+    void action_choose() {
+        const string actions = "cpkrttd";
+        const string actions_chinese[7] = {"吃", "碰", "槓", "立直", "自摸", "和", "丟牌"};
+        bool is_action_available[7] = {chiiable(), ponable(), kanable(), reachable(), tsumouable(), ronable(), true};
+
         string message = "";
+        string available_actions = "";
 
-        bool tsumou = tsumouable();
-        bool kang = kangable();
-        bool reach = reachable();
-
-        if (tsumou) {
-            message += (message == "" ? "tsumou" : ", tsumou");
+        for (int i = 0; i < 7; i++) {
+            if (is_action_available[i]) {
+                message += (message.empty() ? "" : ", ") + actions_chinese[i];
+                available_actions += actions[i];
+            }
         }
 
-        if (kang) {
-            message += (message == "" ? "kang" : ", kang");
-        }
-
-        if (reach) {
-            message += (message == "" ? "reach" : ", reach");
-        }
-
-        if (message == "") {
-            cout << "You can only discard a card. Good luck!\n";
-        }
-        else {
-            cout << "You can " << message
-                << ", or discard a card. Let's Go!\n";
-        }
-
-        cout << '\n';
-
-        cout << "Please input what you want to do? "
-            << "(tsumou->t, kang->k, reach->r, discard->d): ";
+        cout << "You can " << message << "\n";
+        cout << "Please input what you want to do? \n";
+        cout << "(吃->c, 碰->p, 槓->k, 立直->r, 自摸/和->t, 丟牌->d): ";
 
         char input;
-        cin >> input;
-
-        while (input != 't' && input != 'k' && input != 'r' && input != 'd') {
-            cout << "Invalid action! Please try again: ";
+        do {
             cin >> input;
-        }
+            if (actions.find(input) == string::npos) {
+                cout << "Invalid action! Please try again: ";
+            }
+            else if (available_actions.find(input) == string::npos) {
+                cout << "You cannot do that action! Please try again: ";
+            }
+            else {
+                break;
+            }
+        } while (true);
 
-        // TODO: 根據 input 執行對應操作
+        execute_action(input);
     }
 
-    void operationcheck() {
+    void action_check() {
         /*
             check:
             吃
@@ -270,7 +286,7 @@ public:
         */
     }
 
-    void throwcard() {
+    void throw_card() {
         cout << "Throw a card, type the alphabet: ";
 
         char input;
@@ -298,25 +314,25 @@ public:
     void ron_nya() {
     }
 
-    void riichi() {
+    void reach() {
     }
 
     void tsumo() {
     }
 
-    bool chiable() {
+    bool chiiable() {
         return false;
     }
 
-    bool pongable() {
+    bool ponable() {
         return false;
     }
 
-    bool kangable() {
+    bool kanable() {
         return false;
     }
 
-    bool longable() {
+    bool ronable() {
         return false;
     }
 
@@ -390,6 +406,20 @@ public:
     }
 };
 
+
+int ask_num_of_player() {
+    int num;
+    do {
+        cin >> num;
+        if (num < 2 || num > 6) {
+            cout << "Invalid number of players. "
+                 << "Please enter a number between 2 and 6: ";
+        }
+    } while (num < 2 || num > 6);
+    return num;
+}
+
+
 int main() {
     CardMountain mountain;
 
@@ -397,16 +427,7 @@ int main() {
     mountain.main.print();
 
     cout << "Enter the number of players: ";
-
-    int num_players;
-    do {
-        cin >> num_players;
-
-        if (num_players < 2 || num_players > 6) {
-            cout << "Invalid number of players. "
-                 << "Please enter a number between 2 and 6: ";
-        }
-    } while (num_players < 2 || num_players > 6);
+    int num_players = ask_num_of_player();
 
     GameManager game;
 
