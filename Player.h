@@ -24,7 +24,7 @@ public:
     // 建構函數
     Player(std::string _name = "", int _position = 0, int _point = 35000, int _status = 0);
 
-    // 初始化
+    // 初始化，拿13張牌
     void initialization(CardMountain &mountain);
     
     // 秀出手牌

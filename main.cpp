@@ -8,6 +8,7 @@
 #include "CardSet.h"
 #include "CardMountain.h"
 #include "Player.h"
+#include "GameManager.h"
 
 using namespace std;
 
@@ -26,20 +27,6 @@ const string original_mountain = []() {  //建立原始牌山，將每種牌按�
     }
     return mountain;
 }();
-
-
-class GameManager {
-public:
-    int order = 1;
-    int stage = 0;
-    vector<Player> players;
-
-    void distribute(CardMountain &mountain) {
-        for (auto &p : players) {
-            p.initialization(mountain);
-        }
-    }
-};
 
 
 int ask_num_of_player() {
