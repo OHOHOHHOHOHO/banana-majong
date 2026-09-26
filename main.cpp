@@ -67,22 +67,24 @@ int main() {
     }
 
     cout << "mountain: ";
-    mountain.main.print();
+    game.mountain.main.print();
 
     cout << "dora: ";
-    mountain.dora.print();
+    game.mountain.dora.print();
 
     cout << "ura_dora: ";
-    mountain.ura_dora.print();
+    game.mountain.ura_dora.print();
 
+    /*
     cout << "Please enter your hand: ";
 
     while(cin >> game.players[0].hand.cards){
         cout << game.players[0].tsumouable() << "\n\n";
         cout << "Please enter your hand: ";
     }
-   
+    */
     
+    game.start();
 
 
     

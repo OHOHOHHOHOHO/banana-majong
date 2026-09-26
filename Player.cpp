@@ -110,14 +110,13 @@ void Player::throw_card() {
     char input;
     cin >> input;
 
-    if (hand.cards.find(input) != string::npos) {
-        hand.remove(input);
-        river.add(input, 'b');
-        cout << "You threw: " << input << endl;
+    while (hand.cards.find(input) == string::npos){
+        cout << "You don't have that card in your hand. Please try again: " << endl;
+        cin >> input;
     }
-    else {
-        cout << "You don't have that card in your hand." << endl;
-    }
+    hand.remove(input);
+    river.add(input, 'b');
+    cout << "You threw: " << input << endl;
 }
 
 void Player::chii() {
@@ -155,7 +154,16 @@ bool Player::ronable() {
 }
 
 bool Player::reachable() {
-    return false;
+    for (char letter = 'A'; letter <= 'Z'; letter ++){
+        hand.add(letter);
+        bool result = tsumouable();
+        hand.remove(letter, 1);
+        if (result){
+            return true;
+        }
+    }
+    
+    return false; 
 }
 
 bool Player::tsumouable() {
@@ -282,7 +290,7 @@ bool Player::tsumouable() {
                     connected_groups += num_of_cards_tmp[letter] / 3;
                     num_of_cards_tmp[letter] %= 3;
                 }
-                
+
                 if(letter<=23){
                     while(num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0){
                         num_of_cards_tmp[letter] -= 1;
