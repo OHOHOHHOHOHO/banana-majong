@@ -75,15 +75,17 @@ int main() {
     cout << "ura_dora: ";
     mountain.ura_dora.print();
 
-    game.players[0].hand.cards = "ABCDEFGHIJKLMM";
-    cout << game.players[0].tsumouable() << "\n\n";
+    cout << "Please enter your hand: ";
 
-
-    game.players[0].hand.cards = "ABBCCCDDDDEEEE";
-    cout << game.players[0].tsumouable() << "\n\n";
+    while(cin >> game.players[0].hand.cards){
+        cout << game.players[0].tsumouable() << "\n\n";
+        cout << "Please enter your hand: ";
+    }
+   
     
-    game.players[0].hand.cards = "AAAABBBBCCCDDE";
-    cout << game.players[0].tsumouable() << "\n\n";
+
+
+    
 
     return 0;
 }

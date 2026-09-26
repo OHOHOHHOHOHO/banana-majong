@@ -1,5 +1,7 @@
 #include "Player.h"
 #include <iostream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -157,52 +159,153 @@ bool Player::reachable() {
 }
 
 bool Player::tsumouable() {
-    int oc[26] = {0};
+    vector<int> num_of_cards(26, 0); // 記錄每張牌的數目
     for (int i = 0; i < 14; i++) {
-        oc[int(hand.cards[i] - 'A')]++;
+        num_of_cards[int(hand.cards[i] - 'A')]++;
     }
 
-    int ch[26];        
+    int num_of_pairs = 0; // 對子數量
     for (int i = 0; i < 26; i++) {
-        int group = 0;
-        for (int k = 0; k < 26; k++)
-            ch[k] = oc[k];
-        if (ch[i] >= 2) {
-            ch[i] -= 2;
-            group++;
-            for (int j = 0; j < 26; j++) {
-                while (ch[j] >= 3) {
-                    ch[j] -= 3;
-                    group++;
-                }
-            }
-            for (int j = 0; j < 24; j++) {
-                while (ch[j] != 0) {
-                    if (ch[j] * ch[j+1] * ch[j+2] != 0) {
-                        ch[j]--;
-                        ch[j+1]--;
-                        ch[j+2]--;
-                        group++;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-            if (group == 5) {
-                return true;
-            }
+        if (num_of_cards[i] == 2) {
+            num_of_pairs++;
         }
     }
-
-    int pair7 = 0;
-    for (int i = 0; i < 26; i++) {
-        if (oc[i] == 2) {
-            pair7++;
-        }
-    }
-    if (pair7 == 7) {
+    if (num_of_pairs == 7) {
         return true;
+    }    
+
+    // 註：此和牌檢驗法需要三次判定，如果之後有更好檢驗法，可從此行下方開始更改
+
+    // 判斷1：先從左往右判順子，再刻子
+
+    for (int head = 0; head < 26; head++){
+        // 先找雀頭，並將他從牌堆中移除
+        if (num_of_cards[head] < 2){
+            continue;
+        }
+        num_of_cards[head] -= 2;
+
+        // 接著判斷順子，然後是刻子
+        vector <int> num_of_cards_tmp = num_of_cards;
+        int connected_groups = 0;        
+        for (int letter = 0; letter < 26; letter++) {
+            if(num_of_cards_tmp[letter] > 0){
+                if(letter<=23){
+                    while(num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0){
+                        num_of_cards_tmp[letter] -= 1;
+                        num_of_cards_tmp[letter + 1] -= 1;
+                        num_of_cards_tmp[letter + 2] -= 1;
+                        connected_groups += 1;
+                    }
+                }
+                if(num_of_cards_tmp[letter] >= 3){
+                    connected_groups += num_of_cards_tmp[letter] / 3;
+                    num_of_cards_tmp[letter] %= 3;
+                }
+
+                if(num_of_cards_tmp[letter]!=0){
+                    connected_groups = 0; // 此為找尋不成功的標記，並非找到組數為0
+                    break;
+                }
+            }
+        }
+
+        //記得把雀頭加回來
+        num_of_cards[head] += 2;
+
+        if(connected_groups == 4){
+            return true;
+        }
     }
+    
+
+    // 判斷2：先從右往左判順子，再刻子
+    for (int head = 0; head < 26; head++){
+        // 先找雀頭，並將他從牌堆中移除
+        if (num_of_cards[head] < 2){
+            continue;
+        }
+        num_of_cards[head] -= 2;
+
+        // 接著判斷順子，然後是刻子
+        vector <int> num_of_cards_tmp = num_of_cards;
+
+        //這次從右到左，所以將陣列反轉
+        reverse(num_of_cards_tmp.begin(), num_of_cards_tmp.end());
+
+        int connected_groups = 0;        
+        for (int letter = 0; letter < 26; letter++) {
+            if(num_of_cards_tmp[letter] > 0){
+                if(letter<=23){
+                    while(num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0){
+                        num_of_cards_tmp[letter] -= 1;
+                        num_of_cards_tmp[letter + 1] -= 1;
+                        num_of_cards_tmp[letter + 2] -= 1;
+                        connected_groups += 1;
+                    }
+                }
+                if(num_of_cards_tmp[letter] >= 3){
+                    connected_groups += num_of_cards_tmp[letter] / 3;
+                    num_of_cards_tmp[letter] %= 3;
+                }
+
+                if(num_of_cards_tmp[letter]!=0){
+                    connected_groups = 0; // 此為找尋不成功的標記，並非找到組數為0
+                    break;
+                }
+            }
+        }
+
+        //記得把雀頭加回來
+        num_of_cards[head] += 2;
+
+        if(connected_groups == 4){
+            return true;
+        }
+    }
+
+
+    // 判斷3：先抓完刻子再順子
+    for (int head = 0; head < 26; head++){
+        // 先找雀頭，並將他從牌堆中移除
+        if (num_of_cards[head] < 2){
+            continue;
+        }
+        num_of_cards[head] -= 2;
+
+        // 接著判斷刻子，然後是順子(左到右跟右到左是一樣的)
+        vector <int> num_of_cards_tmp = num_of_cards;
+        int connected_groups = 0;        
+        for (int letter = 0; letter < 26; letter++) {
+            if(num_of_cards_tmp[letter] > 0){
+                if(num_of_cards_tmp[letter] >= 3){
+                    connected_groups += num_of_cards_tmp[letter] / 3;
+                    num_of_cards_tmp[letter] %= 3;
+                }
+                
+                if(letter<=23){
+                    while(num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0){
+                        num_of_cards_tmp[letter] -= 1;
+                        num_of_cards_tmp[letter + 1] -= 1;
+                        num_of_cards_tmp[letter + 2] -= 1;
+                        connected_groups += 1;
+                    }
+                }
+
+                if(num_of_cards_tmp[letter]!=0){
+                    connected_groups = 0; // 此為找尋不成功的標記，並非找到組數為0
+                    break;
+                }
+            }
+        }
+
+        //記得把雀頭加回來
+        num_of_cards[head] += 2;
+
+        if(connected_groups == 4){
+            return true;
+        }
+    }
+
     return false;
 }
