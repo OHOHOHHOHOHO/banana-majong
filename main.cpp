@@ -51,14 +51,16 @@ int main() {
     cout << "Enter the number of players: ";
     int num_players = ask_num_of_player();
 
-    GameManager game;
+    vector <Player> players;
 
     for (int i = 0; i < num_players; i++) {
         string name = "Player" + to_string(i + 1);
-        game.players.emplace_back(name, i + 1);
+        players.emplace_back(name, i + 1);
     }
 
-    game.distribute(mountain);
+    GameManager game(mountain, players);
+
+    game.distribute();
 
     for (auto &p : game.players) {
         p.display_hand();
@@ -73,7 +75,15 @@ int main() {
     cout << "ura_dora: ";
     mountain.ura_dora.print();
 
-    // TODO: 開始遊戲流程
+    game.players[0].hand.cards = "ABCDEFGHIJKLMM";
+    cout << game.players[0].tsumouable() << "\n\n";
+
+
+    game.players[0].hand.cards = "ABBCCCDDDDEEEE";
+    cout << game.players[0].tsumouable() << "\n\n";
+    
+    game.players[0].hand.cards = "AAAABBBBCCCDDE";
+    cout << game.players[0].tsumouable() << "\n\n";
 
     return 0;
 }
