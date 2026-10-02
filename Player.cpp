@@ -73,23 +73,28 @@ void Player::action_choose() {
     }
 
     cout << "You can " << message << "\n";
-    cout << "Please input what you want to do? \n";
 
     char input;
-    do {
-        cout << "(吃->c, 碰->p, 槓->k, 立直->r, 自摸/和->t, 丟牌->d): ";
-        cin >> input;
-        if (actions.find(input) == string::npos) {
-            cout << "Invalid action!\n";
-        }
-        else if (available_actions.find(input) == string::npos) {
-            cout << "You cannot do that action!\n";
-        }
-        else {
-            break;
-        }
-    } while (true);
-
+    if (available_actions=="d") {
+        input = 'd';
+    }
+    else {
+        cout << "Please input what you want to do? \n";
+        do {
+            cout << "(吃->c, 碰->p, 槓->k, 立直->r, 自摸/和->t, 丟牌->d): ";
+            cin >> input;
+            if (actions.find(input) == string::npos) {
+                cout << "Invalid action!\n";
+            }
+            else if (available_actions.find(input) == string::npos) {
+                cout << "You cannot do that action!\n";
+            }
+            else {
+                break;
+            }
+        } while (true);
+    }
+    
     execute_action(input);
     cout << "\n\n\n";
 }
