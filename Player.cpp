@@ -67,21 +67,20 @@ void Player::action_choose() {
 
     for (int i = 0; i < 7; i++) {
         if (is_action_available[i]) {
-            message += (message.empty() ? "" : ", ") + actions_chinese[i];
+            message += (message.empty() ? "" : "、") + actions_chinese[i] + "(" + actions[i] + ")";
             available_actions += actions[i];
         }
     }
 
-    cout << "You can " << message << "\n";
+    cout << "你可以：" << (available_actions=="d" ? "丟牌" : message) << "\n";
 
     char input;
     if (available_actions=="d") {
         input = 'd';
     }
     else {
-        cout << "Please input what you want to do? \n";
         do {
-            cout << "(吃->c, 碰->p, 槓->k, 立直->r, 自摸/和->t, 丟牌->d): ";
+            cout << "選擇你要執行的動作代碼：";
             cin >> input;
             if (actions.find(input) == string::npos) {
                 cout << "Invalid action!\n";
