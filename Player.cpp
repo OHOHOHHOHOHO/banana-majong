@@ -48,7 +48,7 @@ void Player::initialization(CardMountain &mountain) {
 }
 
 void Player::display_hand() {
-    cout << name << "'s hand:\n";
+    cout << name << "'s hand: ";
     hand.print();
 }
 
@@ -74,16 +74,16 @@ void Player::action_choose() {
 
     cout << "You can " << message << "\n";
     cout << "Please input what you want to do? \n";
-    cout << "(吃->c, 碰->p, 槓->k, 立直->r, 自摸/和->t, 丟牌->d): ";
 
     char input;
     do {
+        cout << "(吃->c, 碰->p, 槓->k, 立直->r, 自摸/和->t, 丟牌->d): ";
         cin >> input;
         if (actions.find(input) == string::npos) {
-            cout << "Invalid action! Please try again: ";
+            cout << "Invalid action!\n";
         }
         else if (available_actions.find(input) == string::npos) {
-            cout << "You cannot do that action! Please try again: ";
+            cout << "You cannot do that action!\n";
         }
         else {
             break;
@@ -91,6 +91,7 @@ void Player::action_choose() {
     } while (true);
 
     execute_action(input);
+    cout << "\n\n\n";
 }
 
 void Player::action_check() {
@@ -105,18 +106,19 @@ void Player::action_check() {
 }
 
 void Player::throw_card() {
-    cout << "Throw a card, type the alphabet: ";
+    cout << "Throw a card, type an alphabet: ";
 
     char input;
     cin >> input;
 
     while (hand.cards.find(input) == string::npos){
-        cout << "You don't have that card in your hand. Please try again: " << endl;
+        cout << "You don't have " << input << " in your hand." << endl;
+        cout << "Throw a card, type an alphabet: ";
         cin >> input;
     }
     hand.remove(input);
     river.add(input, 'b');
-    cout << "You threw: " << input << endl;
+    cout << "You threw: " << input;
 }
 
 void Player::chii() {

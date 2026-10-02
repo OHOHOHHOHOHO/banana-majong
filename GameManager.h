@@ -3,6 +3,7 @@
 #include "CardMountain.h"
 #include "Player.h"
 #include <vector>
+#include <iostream>
 
 // 建立GameManager類，以管理遊戲的進行
 class GameManager {

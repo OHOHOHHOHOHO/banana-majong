@@ -19,6 +19,7 @@ void GameManager::start() {
         Player &rec_player = players[order];
         rec_player.take(mountain, 1);
         rec_player.display_hand();
+        cout << "Dora: " << mountain.get_dora() << "\n\n";
         rec_player.action_choose();
         stage = 1;
         order = (order + 1) % players.size();

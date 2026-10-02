@@ -32,12 +32,14 @@ const string original_mountain = []() {               // 建立原始牌山，�
 int ask_num_of_player() {                             // 詢問遊戲人數
     int num;
     do {
+        cout << "Enter the number of players: ";
         cin >> num;
         if (num < 2 || num > 6) {
-            cout << "Invalid number of players. "
-                 << "Please enter a number between 2 and 6: ";
+            cout << "Invalid number of players.\n"
+                 << "The number of players must be between 2 and 6.\n";
         }
     } while (num < 2 || num > 6);
+    cout << "\n";
     return num;
 }
 
@@ -47,8 +49,8 @@ int main() {
 
     cout << "original mountain: ";
     mountain.main.print();
+    cout << "\n";
 
-    cout << "Enter the number of players: ";
     int num_players = ask_num_of_player();
 
     vector <Player> players;
@@ -66,7 +68,7 @@ int main() {
         p.display_hand();
     }
 
-    cout << "mountain: ";
+    cout << "\nmountain: ";
     game.mountain.main.print();
 
     cout << "dora: ";
@@ -74,6 +76,7 @@ int main() {
 
     cout << "ura_dora: ";
     game.mountain.ura_dora.print();
+    cout << "\n\n";
 
     /*
     cout << "Please enter your hand: ";
