@@ -1,5 +1,6 @@
 #include "CardMountain.h"
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -32,7 +33,7 @@ void CardMountain::open_dora(int count) {
         opened_dora_count += count;
     }
     else {
-        cout << "All dora indicators are already opened." << endl;
+        throw std::out_of_range("All dora indicators are already opened.");
     }
 }
 

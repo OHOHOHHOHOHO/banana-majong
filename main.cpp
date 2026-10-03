@@ -4,6 +4,8 @@
 #include <random>
 #include <string>
 #include <utility>
+#include <stdexcept>
+#include <limits>
 
 #include "CardSet.h"
 #include "CardMountain.h"
@@ -31,25 +33,27 @@ const string original_mountain = []() {               // 建立原始牌山，�
 
 int ask_num_of_player() {                             // 詢問遊戲人數
     int num;
-    do {
-        cout << "Enter the number of players: ";
-        cin >> num;
-        if (num < 2 || num > 6) {
-            cout << "Invalid number of players.\n"
-                 << "The number of players must be between 2 and 6.\n";
+    while (true) {
+        cout << "Enter the number of players (2-6): ";
+        if (!(cin >> num) || cin.peek() != '\n') {    // 檢查輸入是否為整數，並且後面沒有其他字符
+            cout << "Invalid input. Please enter a valid integer.\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
         }
-    } while (num < 2 || num > 6);
+        if (num >= 2 && num <= 6) {
+            break;
+        }
+        cout << "Invalid number of players. The number of players must be between 2 and 6.\n";
+    }
     cout << "\n";
     return num;
 }
 
 
 int main() {
+try {
     CardMountain mountain;
-
-    cout << "original mountain: ";
-    mountain.main.print();
-    cout << "\n";
 
     int num_players = ask_num_of_player();
 
@@ -93,4 +97,14 @@ int main() {
     
 
     return 0;
+    
+}
+catch (const std::exception &e) {
+    std::cerr << e.what() << std::endl;
+    return 1;
+}
+catch (...) {
+    std::cerr << "[ERROR] An unknown error occurred." << std::endl;
+    return 1;
+}
 }

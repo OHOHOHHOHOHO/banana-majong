@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <stdexcept>
+#include <limits>
 
 using namespace std;
 
@@ -28,7 +30,7 @@ void Player::execute_action(char action) {
             throw_card();
             break;
         default:
-            cout << "Invalid operation while choosing action." << endl;
+            throw std::invalid_argument("[ERROR] Invalid action parameter for Player::execute_action.");
     }
 }
 
@@ -67,31 +69,40 @@ void Player::action_choose() {
 
     for (int i = 0; i < 7; i++) {
         if (is_action_available[i]) {
-            message += (message.empty() ? "" : ", ") + actions_chinese[i];
+            message += (message.empty() ? "" : "、") + actions_chinese[i] + "(" + actions[i] + ")";
             available_actions += actions[i];
         }
     }
 
-    cout << "You can " << message << "\n";
-    cout << "Please input what you want to do? \n";
+    cout << "你可以：" << (available_actions=="d" ? "丟牌" : message) << "\n";
 
     char input;
-    do {
-        cout << "(吃->c, 碰->p, 槓->k, 立直->r, 自摸/和->t, 丟牌->d): ";
-        cin >> input;
-        if (actions.find(input) == string::npos) {
-            cout << "Invalid action!\n";
-        }
-        else if (available_actions.find(input) == string::npos) {
-            cout << "You cannot do that action!\n";
-        }
-        else {
-            break;
-        }
-    } while (true);
-
+    if (available_actions=="d") {
+        input = 'd';
+    }
+    else {
+        do {
+            cout << "選擇你要執行的動作代碼：";
+            cin >> input;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            input = tolower(input);
+            if (actions.find(input) == string::npos) {
+                cout << "Invalid action!\n";
+            }
+            else if (available_actions.find(input) == string::npos) {
+                cout << "You cannot do that action!\n";
+            }
+            else {
+                break;
+            }
+        } while (true);
+    }
+    
     execute_action(input);
-    cout << "\n\n\n";
+    hand.sort();
+    cout << "After action, your hand: ";
+    hand.print();
+    cout << "\n\n";
 }
 
 void Player::action_check() {
@@ -110,15 +121,19 @@ void Player::throw_card() {
 
     char input;
     cin >> input;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    input = toupper(input);
 
     while (hand.cards.find(input) == string::npos){
         cout << "You don't have " << input << " in your hand." << endl;
         cout << "Throw a card, type an alphabet: ";
         cin >> input;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        input = toupper(input);
     }
     hand.remove(input);
     river.add(input, 'b');
-    cout << "You threw: " << input;
+    cout << "You threw: " << input << "\n";
 }
 
 void Player::chii() {
