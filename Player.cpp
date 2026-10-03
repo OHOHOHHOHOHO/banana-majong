@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <stdexcept>
+#include <limits>
 
 using namespace std;
 
@@ -83,6 +84,7 @@ void Player::action_choose() {
         do {
             cout << "選擇你要執行的動作代碼：";
             cin >> input;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             input = tolower(input);
             if (actions.find(input) == string::npos) {
                 cout << "Invalid action!\n";
@@ -119,12 +121,14 @@ void Player::throw_card() {
 
     char input;
     cin >> input;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     input = toupper(input);
 
     while (hand.cards.find(input) == string::npos){
         cout << "You don't have " << input << " in your hand." << endl;
         cout << "Throw a card, type an alphabet: ";
         cin >> input;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         input = toupper(input);
     }
     hand.remove(input);

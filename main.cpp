@@ -5,6 +5,7 @@
 #include <string>
 #include <utility>
 #include <stdexcept>
+#include <limits>
 
 #include "CardSet.h"
 #include "CardMountain.h"
