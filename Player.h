@@ -55,6 +55,6 @@ public:
     bool ponable();
     bool kanable();
     bool ronable();
-    bool reachable();
+    std::pair<bool, std::vector<std::pair<char, char>>> reachable();
     bool tsumouable(CardSet card_set = CardSet());
 };

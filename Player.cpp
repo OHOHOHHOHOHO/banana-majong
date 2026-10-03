@@ -62,7 +62,7 @@ void Player::take(CardMountain &mountain, int count) {
 void Player::action_choose() {
     const string actions = "cpkrttd";
     const string actions_chinese[7] = {"吃", "碰", "槓", "立直", "自摸", "和", "丟牌"};
-    bool is_action_available[7] = {chiiable(), ponable(), kanable(), reachable(), tsumouable(), ronable(), true};
+    bool is_action_available[7] = {chiiable(), ponable(), kanable(), reachable().first, tsumouable(), ronable(), true};
 
     string message = "";
     string available_actions = "";
@@ -170,21 +170,22 @@ bool Player::ronable() {
     return false;
 }
 
-bool Player::reachable() {
+pair<bool, vector<pair<char, char>>> Player::reachable() {
     CardSet temp_hand = hand;
+    vector<pair<char, char>> reachable_cards;
     for (char org_letter = 'A'; org_letter <= 'Z'; org_letter++) {
         for (char new_letter = 'A'; new_letter <= 'Z'; new_letter++) {
             if (temp_hand.cards.find(org_letter) != string::npos) {
                 temp_hand.replace(org_letter, new_letter);
                 if (tsumouable(temp_hand)) {
-                    return true;
+                    reachable_cards.push_back({org_letter, new_letter});
                 }
                 temp_hand.replace(new_letter, org_letter);
             }
         }
     }
     
-    return false; 
+    return {!reachable_cards.empty(), reachable_cards};
 }
 
 bool Player::tsumouable(CardSet card_set) {
