@@ -96,7 +96,10 @@ void Player::action_choose() {
     }
     
     execute_action(input);
-    cout << "\n\n\n";
+    hand.sort();
+    cout << "After action, your hand: ";
+    hand.print();
+    cout << "\n\n";
 }
 
 void Player::action_check() {
@@ -125,7 +128,7 @@ void Player::throw_card() {
     }
     hand.remove(input);
     river.add(input, 'b');
-    cout << "You threw: " << input;
+    cout << "You threw: " << input << "\n";
 }
 
 void Player::chii() {
