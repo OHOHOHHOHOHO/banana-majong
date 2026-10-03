@@ -82,6 +82,7 @@ void Player::action_choose() {
         do {
             cout << "選擇你要執行的動作代碼：";
             cin >> input;
+            input = tolower(input);
             if (actions.find(input) == string::npos) {
                 cout << "Invalid action!\n";
             }
@@ -114,11 +115,13 @@ void Player::throw_card() {
 
     char input;
     cin >> input;
+    input = toupper(input);
 
     while (hand.cards.find(input) == string::npos){
         cout << "You don't have " << input << " in your hand." << endl;
         cout << "Throw a card, type an alphabet: ";
         cin >> input;
+        input = toupper(input);
     }
     hand.remove(input);
     river.add(input, 'b');
