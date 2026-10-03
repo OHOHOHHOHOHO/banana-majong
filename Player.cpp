@@ -54,6 +54,10 @@ void Player::display_hand() {
     hand.print();
 }
 
+bool Player::is_fuuroed() {
+    return !fuuro.empty();
+}
+
 // 預設拿一張牌
 void Player::take(CardMountain &mountain, int count) {
     hand.add(mountain.pop(count), 'b');
@@ -62,7 +66,7 @@ void Player::take(CardMountain &mountain, int count) {
 void Player::action_choose() {
     const string actions = "cpkrttd";
     const string actions_chinese[7] = {"吃", "碰", "槓", "立直", "自摸", "和", "丟牌"};
-    bool is_action_available[7] = {chiiable(), ponable(), kanable(), reachable(), tsumouable(), ronable(), true};
+    bool is_action_available[7] = {chiiable(), ponable(), kanable(), reachable().first, tsumouable(), ronable(), true};
 
     string message = "";
     string available_actions = "";
@@ -124,7 +128,7 @@ void Player::throw_card() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     input = toupper(input);
 
-    while (hand.cards.find(input) == string::npos){
+    while (hand.cards.find(input) == string::npos) {
         cout << "You don't have " << input << " in your hand." << endl;
         cout << "Throw a card, type an alphabet: ";
         cin >> input;
@@ -170,23 +174,37 @@ bool Player::ronable() {
     return false;
 }
 
-bool Player::reachable() {
-    for (char letter = 'A'; letter <= 'Z'; letter ++){
-        hand.add(letter);
-        bool result = tsumouable();
-        hand.remove(letter, 1);
-        if (result){
-            return true;
+pair<bool, vector<pair<char, char>>> Player::reachable() {
+    CardSet temp_hand = hand;
+    vector<pair<char, char>> reachable_cards;
+    if (!is_fuuroed()) {
+        return {false, reachable_cards};
+    }
+    for (char org_letter = 'A'; org_letter <= 'Z'; org_letter++) {
+        for (char new_letter = 'A'; new_letter <= 'Z'; new_letter++) {
+            if (temp_hand.cards.find(org_letter) != string::npos) {
+                temp_hand.replace(org_letter, new_letter);
+                if (tsumouable(temp_hand)) {
+                    reachable_cards.push_back({org_letter, new_letter});
+                }
+                temp_hand.replace(new_letter, org_letter);
+            }
         }
     }
     
-    return false; 
+    return {!reachable_cards.empty(), reachable_cards};
 }
 
-bool Player::tsumouable() {
+bool Player::tsumouable(CardSet card_set) {
+    if (card_set.length() == 0) {
+        card_set = hand;
+    }
+    if (card_set.length() != 14) {
+        return false;
+    }
     vector<int> num_of_cards(26, 0); // 記錄每張牌的數目
     for (int i = 0; i < 14; i++) {
-        num_of_cards[int(hand.cards[i] - 'A')]++;
+        num_of_cards[int(card_set.cards[i] - 'A')]++;
     }
 
     int num_of_pairs = 0; // 對子數量
@@ -203,9 +221,9 @@ bool Player::tsumouable() {
 
     // 判斷1：先從左往右判順子，再刻子
 
-    for (int head = 0; head < 26; head++){
+    for (int head = 0; head < 26; head++) {
         // 先找雀頭，並將他從牌堆中移除
-        if (num_of_cards[head] < 2){
+        if (num_of_cards[head] < 2) {
             continue;
         }
         num_of_cards[head] -= 2;
@@ -214,8 +232,8 @@ bool Player::tsumouable() {
         vector <int> num_of_cards_tmp = num_of_cards;
         int connected_groups = 0;        
         for (int letter = 0; letter < 26; letter++) {
-            if(num_of_cards_tmp[letter] > 0){
-                if(letter<=23){
+            if (num_of_cards_tmp[letter] > 0) {
+                if (letter <= 23) {
                     while(num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0){
                         num_of_cards_tmp[letter] -= 1;
                         num_of_cards_tmp[letter + 1] -= 1;
@@ -223,12 +241,12 @@ bool Player::tsumouable() {
                         connected_groups += 1;
                     }
                 }
-                if(num_of_cards_tmp[letter] >= 3){
+                if (num_of_cards_tmp[letter] >= 3) {
                     connected_groups += num_of_cards_tmp[letter] / 3;
                     num_of_cards_tmp[letter] %= 3;
                 }
 
-                if(num_of_cards_tmp[letter]!=0){
+                if (num_of_cards_tmp[letter] != 0) {
                     connected_groups = 0; // 此為找尋不成功的標記，並非找到組數為0
                     break;
                 }

@@ -8,11 +8,13 @@ private:
     std::string mod_cards(std::string original_string, std::string target_string, char option, int count = 1);
 
 public:
-    int length;        // 牌組的長度
     std::string cards; // 牌組的內容
 
     // 建構函數，初始化牌組的長度和內容
     CardSet(std::string initial_cards = "");
+
+    // 牌組長度
+    int length();
 
     // 排序
     void sort();
@@ -35,6 +37,9 @@ public:
 
     // 刪除牌組內容
     void remove(char card, int count = 1);
+
+    // 將指定字母牌替換為另一個字母牌
+    void replace(char old_card, char new_card, int count = 1);
 
     // 將一段連續牌彈出成字串，並從原牌組移除
     std::string pop(int count = 1, char option = 'f');
