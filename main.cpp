@@ -46,10 +46,6 @@ int ask_num_of_player() {                             // 詢問遊戲人數
 int main() {
     CardMountain mountain;
 
-    cout << "original mountain: ";
-    mountain.main.print();
-    cout << "\n";
-
     int num_players = ask_num_of_player();
 
     vector <Player> players;
