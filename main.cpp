@@ -32,11 +32,10 @@ const string original_mountain = []() {               // 建立原始牌山，�
 int ask_num_of_player() {                             // 詢問遊戲人數
     int num;
     do {
-        cout << "Enter the number of players: ";
+        cout << "Enter the number of players (2-6): ";
         cin >> num;
         if (num < 2 || num > 6) {
-            cout << "Invalid number of players.\n"
-                 << "The number of players must be between 2 and 6.\n";
+            cout << "Invalid number of players. The number of players must be between 2 and 6.\n";
         }
     } while (num < 2 || num > 6);
     cout << "\n";

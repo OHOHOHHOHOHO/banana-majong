@@ -28,7 +28,7 @@ void Player::execute_action(char action) {
             throw_card();
             break;
         default:
-            cout << "Invalid operation while choosing action." << endl;
+            cout << "[ERROR] Invalid operation while choosing action." << endl;
     }
 }
 
