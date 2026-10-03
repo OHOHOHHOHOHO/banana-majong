@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include <stdexcept>
 
 using namespace std;
 
@@ -31,12 +32,12 @@ string CardSet::mod_cards(string original_string, string target_string, char opt
             }
         }
         if (count > 0 && !remove_all) {
-            cout << "[WARN] Not enough " << target_string[0] << " to remove." << endl;
+            throw std::out_of_range("[ERROR] Not enough cards " + target_string + " to remove while executing CardSet::mod_cards.");
         }
         original_string = result;
     }
     else {
-        cout << "[ERROR] Invalid option parameter for mod_cards." << endl;
+        throw std::invalid_argument("[ERROR] Invalid option parameter for CardSet::mod_cards.");
     }
     return original_string;
 }
@@ -91,8 +92,7 @@ void CardSet::remove(char card, int count) {
 // 預設彈出1張牌，選項為'f'(預設)表示從牌組前面彈出，'b'表示從牌組後面彈出
 string CardSet::pop(int count, char option) {
     if (count > length) {
-        cout << "[WARN] Not enough cards to pop." << endl;
-        count = length;
+        throw std::out_of_range("[ERROR] Not enough cards to pop while executing CardSet::pop.");
     }
     if (option == 'f') {
         string popped_cards = cards.substr(0, count);
@@ -107,7 +107,6 @@ string CardSet::pop(int count, char option) {
         return popped_cards;
     }
     else {
-        cout << "[ERROR] Invalid option parameter for pop." << endl;
-        return "";
+        throw std::invalid_argument("[ERROR] Invalid option parameter for CardSet::pop.");
     }
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <stdexcept>
 
 using namespace std;
 
@@ -28,7 +29,7 @@ void Player::execute_action(char action) {
             throw_card();
             break;
         default:
-            cout << "[ERROR] Invalid operation while choosing action." << endl;
+            throw std::invalid_argument("[ERROR] Invalid action parameter for Player::execute_action.");
     }
 }
 
