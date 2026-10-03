@@ -87,13 +87,20 @@ try {
 
     while(cin >> game.players[0].hand.cards){
         auto [is_reachable, reachable_cards] = game.players[0].reachable();
+        cout << "Is tsumouable: " << game.players[0].tsumouable() << "\n";
         cout << "Is reachable: " << is_reachable << "\n";
         cout << "Reachable cards: ";
+        char last_from = '@';
         for (const auto &[from, to] : reachable_cards) {
-            cout << from << " -> " << to << "  ";
+            if (last_from != from) {
+                cout << '\n' << from << " -> " << to;
+            }
+            else {
+                cout << ", " << to;
+            }
+            last_from = from;
         }
-        cout << "\n";
-        cout << game.players[0].tsumouable() << "\n\n";
+        cout << "\n\n";
         cout << "Please enter your hand: ";
     }
     */

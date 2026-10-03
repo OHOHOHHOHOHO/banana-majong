@@ -192,6 +192,9 @@ bool Player::tsumouable(CardSet card_set) {
     if (card_set.length() == 0) {
         card_set = hand;
     }
+    if (card_set.length() != 14) {
+        return false;
+    }
     vector<int> num_of_cards(26, 0); // 記錄每張牌的數目
     for (int i = 0; i < 14; i++) {
         num_of_cards[int(card_set.cards[i] - 'A')]++;
