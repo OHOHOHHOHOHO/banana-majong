@@ -54,6 +54,10 @@ void Player::display_hand() {
     hand.print();
 }
 
+bool Player::is_fuuroed() {
+    return !fuuro.empty();
+}
+
 // 預設拿一張牌
 void Player::take(CardMountain &mountain, int count) {
     hand.add(mountain.pop(count), 'b');
@@ -173,6 +177,9 @@ bool Player::ronable() {
 pair<bool, vector<pair<char, char>>> Player::reachable() {
     CardSet temp_hand = hand;
     vector<pair<char, char>> reachable_cards;
+    if (!is_fuuroed()) {
+        return {false, reachable_cards};
+    }
     for (char org_letter = 'A'; org_letter <= 'Z'; org_letter++) {
         for (char new_letter = 'A'; new_letter <= 'Z'; new_letter++) {
             if (temp_hand.cards.find(org_letter) != string::npos) {

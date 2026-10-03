@@ -15,7 +15,7 @@ public:
     std::string name;   // 玩家名稱
     int position;       // 玩家位置
     int point;          // 點棒數量
-    int status;         // 玩家狀態：0 = 門清未立, 1 = 立直, 2 = 副露
+    int status;         // 玩家狀態：0 = 未立直/副露, 1 = 立直, 2 = 已和牌
 
     CardSet hand;                                // 玩家手牌
     std::vector<std::pair<CardSet, int>> fuuro;  // 副露牌組 + 餵牌玩家位置
@@ -29,6 +29,9 @@ public:
     
     // 秀出手牌
     void display_hand();
+
+    // 判斷是否有副露
+    bool is_fuuroed();
     
     // 從牌山拿牌
     void take(CardMountain &mountain, int count = 1);
