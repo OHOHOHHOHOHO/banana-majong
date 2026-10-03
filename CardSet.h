@@ -36,6 +36,9 @@ public:
     // 刪除牌組內容
     void remove(char card, int count = 1);
 
+    // 將指定字母牌替換為另一個字母牌
+    void replace(char old_card, char new_card, int count = 1);
+
     // 將一段連續牌彈出成字串，並從原牌組移除
     std::string pop(int count = 1, char option = 'f');
 };

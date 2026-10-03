@@ -89,6 +89,22 @@ void CardSet::remove(char card, int count) {
     length = cards.length();
 }
 
+// 預設替換1張指定字母的牌
+void CardSet::replace(char old_card, char new_card, int count) {
+    for (char& c : cards) {
+        if (c == old_card) {
+            c = new_card;
+            count--;
+            if (count == 0) {
+                return;
+            }
+        }
+    }
+    if (count > 0) {
+        throw std::out_of_range("[ERROR] Not enough cards " + string(1, old_card) + " to replace while executing CardSet::replace.");
+    }
+}
+
 // 預設彈出1張牌，選項為'f'(預設)表示從牌組前面彈出，'b'表示從牌組後面彈出
 string CardSet::pop(int count, char option) {
     if (count > length) {
