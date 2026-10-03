@@ -86,6 +86,7 @@ try {
     cout << "Please enter your hand: ";
 
     while(cin >> game.players[0].hand.cards){
+        cout << game.players[0].reachable() << "\n";
         cout << game.players[0].tsumouable() << "\n\n";
         cout << "Please enter your hand: ";
     }

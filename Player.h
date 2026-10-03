@@ -56,5 +56,5 @@ public:
     bool kanable();
     bool ronable();
     bool reachable();
-    bool tsumouable();
+    bool tsumouable(CardSet card_set = CardSet());
 };
