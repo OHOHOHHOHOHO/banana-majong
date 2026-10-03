@@ -4,6 +4,7 @@
 #include <random>
 #include <string>
 #include <utility>
+#include <stdexcept>
 
 #include "CardSet.h"
 #include "CardMountain.h"
@@ -44,6 +45,7 @@ int ask_num_of_player() {                             // 詢問遊戲人數
 
 
 int main() {
+try {
     CardMountain mountain;
 
     int num_players = ask_num_of_player();
@@ -88,4 +90,14 @@ int main() {
     
 
     return 0;
+    
+}
+catch (const std::exception &e) {
+    std::cerr << e.what() << std::endl;
+    return 1;
+}
+catch (...) {
+    std::cerr << "[ERROR] An unknown error occurred." << std::endl;
+    return 1;
+}
 }
