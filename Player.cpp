@@ -189,7 +189,7 @@ pair<bool, vector<pair<char, char>>> Player::reachable() {
 }
 
 bool Player::tsumouable(CardSet card_set) {
-    if (card_set.length == 0) {
+    if (card_set.length() == 0) {
         card_set = hand;
     }
     vector<int> num_of_cards(26, 0); // 記錄每張牌的數目

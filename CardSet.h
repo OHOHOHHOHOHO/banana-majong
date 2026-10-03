@@ -8,11 +8,13 @@ private:
     std::string mod_cards(std::string original_string, std::string target_string, char option, int count = 1);
 
 public:
-    int length;        // 牌組的長度
     std::string cards; // 牌組的內容
 
     // 建構函數，初始化牌組的長度和內容
     CardSet(std::string initial_cards = "");
+
+    // 牌組長度
+    int length();
 
     // 排序
     void sort();
