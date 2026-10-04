@@ -72,10 +72,10 @@ char Player::action_choose() {
         }
     }
 
-    cout << "你可以：" << (available_actions=="d" ? "丟牌" : message) << "\n";
+    cout << "你可以：" << (available_actions == "d" ? "丟牌" : message) << "\n";
 
     char input;
-    if (available_actions=="d") {
+    if (available_actions == "d") {
         input = 'd';
     }
     else {
@@ -233,7 +233,7 @@ bool Player::tsumouable(CardSet card_set) {
         for (int letter = 0; letter < 26; letter++) {
             if (num_of_cards_tmp[letter] > 0) {
                 if (letter <= 23) {
-                    while(num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0){
+                    while (num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0) {
                         num_of_cards_tmp[letter] -= 1;
                         num_of_cards_tmp[letter + 1] -= 1;
                         num_of_cards_tmp[letter + 2] -= 1;
@@ -255,43 +255,43 @@ bool Player::tsumouable(CardSet card_set) {
         //記得把雀頭加回來
         num_of_cards[head] += 2;
 
-        if(connected_groups == 4){
+        if (connected_groups == 4) {
             return true;
         }
     }
     
 
     // 判斷2：先從右往左判順子，再刻子
-    for (int head = 0; head < 26; head++){
+    for (int head = 0; head < 26; head++) {
         // 先找雀頭，並將他從牌堆中移除
-        if (num_of_cards[head] < 2){
+        if (num_of_cards[head] < 2) {
             continue;
         }
         num_of_cards[head] -= 2;
 
         // 接著判斷順子，然後是刻子
-        vector <int> num_of_cards_tmp = num_of_cards;
+        vector<int> num_of_cards_tmp = num_of_cards;
 
         //這次從右到左，所以將陣列反轉
         reverse(num_of_cards_tmp.begin(), num_of_cards_tmp.end());
 
         int connected_groups = 0;        
         for (int letter = 0; letter < 26; letter++) {
-            if(num_of_cards_tmp[letter] > 0){
-                if(letter<=23){
-                    while(num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0){
+            if (num_of_cards_tmp[letter] > 0) {
+                if (letter <= 23) {
+                    while (num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0) {
                         num_of_cards_tmp[letter] -= 1;
                         num_of_cards_tmp[letter + 1] -= 1;
                         num_of_cards_tmp[letter + 2] -= 1;
                         connected_groups += 1;
                     }
                 }
-                if(num_of_cards_tmp[letter] >= 3){
+                if (num_of_cards_tmp[letter] >= 3) {
                     connected_groups += num_of_cards_tmp[letter] / 3;
                     num_of_cards_tmp[letter] %= 3;
                 }
 
-                if(num_of_cards_tmp[letter]!=0){
+                if (num_of_cards_tmp[letter] != 0) {
                     connected_groups = 0; // 此為找尋不成功的標記，並非找到組數為0
                     break;
                 }
@@ -301,32 +301,32 @@ bool Player::tsumouable(CardSet card_set) {
         //記得把雀頭加回來
         num_of_cards[head] += 2;
 
-        if(connected_groups == 4){
+        if (connected_groups == 4) {
             return true;
         }
     }
 
 
     // 判斷3：先抓完刻子再順子
-    for (int head = 0; head < 26; head++){
+    for (int head = 0; head < 26; head++) {
         // 先找雀頭，並將他從牌堆中移除
-        if (num_of_cards[head] < 2){
+        if (num_of_cards[head] < 2) {
             continue;
         }
         num_of_cards[head] -= 2;
 
         // 接著判斷刻子，然後是順子(左到右跟右到左是一樣的)
-        vector <int> num_of_cards_tmp = num_of_cards;
+        vector<int> num_of_cards_tmp = num_of_cards;
         int connected_groups = 0;        
         for (int letter = 0; letter < 26; letter++) {
-            if(num_of_cards_tmp[letter] > 0){
-                if(num_of_cards_tmp[letter] >= 3){
+            if (num_of_cards_tmp[letter] > 0) {
+                if (num_of_cards_tmp[letter] >= 3) {
                     connected_groups += num_of_cards_tmp[letter] / 3;
                     num_of_cards_tmp[letter] %= 3;
                 }
 
-                if(letter<=23){
-                    while(num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0){
+                if (letter <= 23) {
+                    while (num_of_cards_tmp[letter] > 0 && num_of_cards_tmp[letter + 1] > 0 && num_of_cards_tmp[letter + 2] > 0) {
                         num_of_cards_tmp[letter] -= 1;
                         num_of_cards_tmp[letter + 1] -= 1;
                         num_of_cards_tmp[letter + 2] -= 1;
@@ -334,7 +334,7 @@ bool Player::tsumouable(CardSet card_set) {
                     }
                 }
 
-                if(num_of_cards_tmp[letter]!=0){
+                if (num_of_cards_tmp[letter] != 0) {
                     connected_groups = 0; // 此為找尋不成功的標記，並非找到組數為0
                     break;
                 }
@@ -344,7 +344,7 @@ bool Player::tsumouable(CardSet card_set) {
         //記得把雀頭加回來
         num_of_cards[head] += 2;
 
-        if(connected_groups == 4){
+        if (connected_groups == 4) {
             return true;
         }
     }
