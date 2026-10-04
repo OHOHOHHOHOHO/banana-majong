@@ -16,7 +16,7 @@ void GameManager::distribute() {
 
 void GameManager::start() {
     while(stage != 2){
-        Player &rec_player = players[order];
+        Player &rec_player = players[order];    // 當前進行動作的玩家
         rec_player.take(mountain, 1);
         rec_player.display_hand();
         cout << "Dora: " << mountain.get_dora() << "      Cards left: " << mountain.main.length() << "\n\n";

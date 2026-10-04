@@ -64,12 +64,12 @@ void Player::take(CardMountain &mountain, int count) {
 }
 
 void Player::action_choose() {
-    const string actions = "cpkrttd";
-    const string actions_chinese[7] = {"吃", "碰", "槓", "立直", "自摸", "和", "丟牌"};
-    bool is_action_available[7] = {chiiable(), ponable(), kanable(), reachable().first, tsumouable(), ronable(), true};
+    const string actions = "cpkrttd";                                                                                     // 動作代碼
+    const string actions_chinese[7] = {"吃", "碰", "槓", "立直", "自摸", "和", "丟牌"};                                     // 中文動作名稱
+    bool is_action_available[7] = {chiiable(), ponable(), kanable(), reachable().first, tsumouable(), ronable(), true};   // 動作可行性判定
 
-    string message = "";
-    string available_actions = "";
+    string message = "";               // 用於告知可行動作的訊息
+    string available_actions = "";     // 用於存儲可行動作的代碼
 
     for (int i = 0; i < 7; i++) {
         if (is_action_available[i]) {

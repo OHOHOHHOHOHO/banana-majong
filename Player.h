@@ -5,7 +5,7 @@
 #include <vector>
 #include <utility>
 
-// 建立一個Player類別，包含玩家的名稱、位置、分數、狀態、手牌、副露、牌河。該類別提供了初始化玩家、抽牌、動作檢查以及各種動作（吃、碰、槓、立直、自摸、丟牌）的功能。
+// 玩家。包含名稱、位置、分數、狀態、手牌、副露、牌河。該類別提供了初始化玩家、抽牌、動作檢查以及各種動作（吃、碰、槓、立直、自摸、丟牌）的功能。
 class Player {
 private:
     // 啟動吃,碰,槓,立,和(摸),丟的操作執行函數
@@ -18,7 +18,7 @@ public:
     int status;         // 玩家狀態：0 = 未立直/副露, 1 = 立直, 2 = 已和牌
 
     CardSet hand;                                // 玩家手牌
-    std::vector<std::pair<CardSet, int>> fuuro;  // 副露牌組 + 餵牌玩家位置
+    std::vector<std::pair<CardSet, int>> fuuro;  // pair<副露牌組, 餵牌玩家位置>
     CardSet river;                               // 牌河
 
     // 建構函數
@@ -45,19 +45,17 @@ public:
     // 讓玩家輸入要丟的牌並丟出
     void throw_card();
 
-    // 玩家動作
-    void chii();
-    void pon();
-    void kan();
-    void ron_nya();
-    void reach();
-    void tsumo();
+    void chii();     // 吃
+    void pon();      // 碰
+    void kan();      // 槓
+    void ron_nya();  // 和
+    void reach();    // 立直
+    void tsumo();    // 自摸
 
-    // 動作可行性判定
-    bool chiiable();
-    bool ponable();
-    bool kanable();
-    bool ronable();
-    std::pair<bool, std::vector<std::pair<char, char>>> reachable();
-    bool tsumouable(CardSet card_set = CardSet());
+    bool chiiable();     // 可吃
+    bool ponable();      // 可碰
+    bool kanable();      // 可槓
+    bool ronable();      // 可和
+    std::pair<bool, std::vector<std::pair<char, char>>> reachable();     // pair<可立直, pair<捨牌, 聽牌>>
+    bool tsumouable(CardSet card_set = CardSet());                       // 可自摸
 };
