@@ -15,4 +15,11 @@ public:
     std::vector<Player> players;  // 玩家列表
 
     // 建構函數
-    GameManager(CardMountain &_mountain , std::vector<Player> &_players
+    GameManager(CardMountain &_mountain , std::vector<Player> &_players);
+
+    // 發牌給所有玩家
+    void distribute();
+
+    // 遊戲開始
+    void start();
+};
