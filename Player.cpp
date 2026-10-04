@@ -9,26 +9,20 @@ using namespace std;
 
 
 // Private
-void Player::execute_action(char action) {
+char Player::execute_action(char action) {
     switch (action) {
         case 'c':
-            chii();
-            break;
+            return chii();
         case 'p':
-            pon();
-            break;
+            return pon();
         case 'k':
-            kan();
-            break;
+            return kan();
         case 'r':
-            reach();
-            break;
+            return reach();
         case 't':
-            tsumo();
-            break;
+            return tsumo();
         case 'd':
-            throw_card();
-            break;
+            return throw_card();
         default:
             throw std::invalid_argument("[ERROR] Invalid action parameter for Player::execute_action.");
     }
@@ -63,7 +57,7 @@ void Player::take(CardMountain &mountain, int count) {
     hand.add(mountain.pop(count), 'b');
 }
 
-void Player::action_choose() {
+char Player::action_choose() {
     const string actions = "cpkrttd";                                                                                     // 動作代碼
     const string actions_chinese[7] = {"吃", "碰", "槓", "立直", "自摸", "和", "丟牌"};                                     // 中文動作名稱
     bool is_action_available[7] = {chiiable(), ponable(), kanable(), reachable().first, tsumouable(), ronable(), true};   // 動作可行性判定
@@ -102,11 +96,9 @@ void Player::action_choose() {
         } while (true);
     }
     
-    execute_action(input);
+    char thrown_card = execute_action(input);   // 執行動作，並取得丟出的牌
     hand.sort();
-    cout << "After action, your hand: ";
-    hand.print();
-    cout << "\n\n";
+    return thrown_card;
 }
 
 void Player::action_check() {
@@ -120,7 +112,7 @@ void Player::action_check() {
     */
 }
 
-void Player::throw_card() {
+char Player::throw_card() {
     cout << "Throw a card, type an alphabet: ";
 
     char input;
@@ -136,26 +128,31 @@ void Player::throw_card() {
         input = toupper(input);
     }
     hand.remove(input);
-    river.add(input, 'b');
-    cout << "You threw: " << input << "\n";
+    return input;
 }
 
-void Player::chii() {
+char Player::chii() {
+    return ' '; // 這裡應該要有吃牌的邏輯，但目前還沒實作
 }
 
-void Player::pon() {
+char Player::pon() {
+    return ' '; // 這裡應該要有碰牌的邏輯，但目前還沒實作
 }
 
-void Player::kan() {
+char Player::kan() {
+    return ' '; // 這裡應該要有槓牌的邏輯，但目前還沒實作
 }
 
-void Player::ron_nya() {
+char Player::ron_nya() {
+    return '0'; // 這裡應該要有和牌的邏輯，但目前還沒實作
 }
 
-void Player::reach() {
+char Player::reach() {
+    return ' '; // 這裡應該要有立直的邏輯，但目前還沒實作
 }
 
-void Player::tsumo() {
+char Player::tsumo() {
+    return '0'; // 這裡應該要有自摸的邏輯，但目前還沒實作
 }
 
 bool Player::chiiable() {
@@ -177,9 +174,11 @@ bool Player::ronable() {
 pair<bool, vector<pair<char, char>>> Player::reachable() {
     CardSet temp_hand = hand;
     vector<pair<char, char>> reachable_cards;
-    if (!is_fuuroed()) {
+
+    if (is_fuuroed()) {
         return {false, reachable_cards};
     }
+
     for (char org_letter = 'A'; org_letter <= 'Z'; org_letter++) {
         for (char new_letter = 'A'; new_letter <= 'Z'; new_letter++) {
             if (temp_hand.cards.find(org_letter) != string::npos) {

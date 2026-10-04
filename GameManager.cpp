@@ -20,7 +20,10 @@ void GameManager::start() {
         rec_player.take(mountain, 1);
         rec_player.display_hand();
         cout << "Dora: " << mountain.get_dora() << "      Cards left: " << mountain.main.length() << "\n\n";
-        rec_player.action_choose();
+        card_buffer = rec_player.action_choose();
+        cout << "You threw: " << card_buffer << "\n";
+        cout << "After action, your hand: " << rec_player.hand.cards << "\n\n\n\n";
+        
         stage = 1;
         order = (order + 1) % players.size();
         stage = 0;
