@@ -171,26 +171,34 @@ bool Player::ronable() {
     return false;
 }
 
-pair<bool, vector<pair<char, char>>> Player::reachable() {
-    CardSet temp_hand = hand;
-    vector<pair<char, char>> reachable_cards;
+pair<bool, vector<pair<char, string>>> Player::reachable() {
+    CardSet temp_hand = hand;                      // 用於測試的手牌副本
+    vector<pair<char, string>> reachable_cards;    // 用於存儲可立直的捨牌及其對應的聽牌組合
 
+    // 如果玩家已經有副露，則不能立直
     if (is_fuuroed()) {
         return {false, reachable_cards};
     }
 
     for (char org_letter = 'A'; org_letter <= 'Z'; org_letter++) {
+        // 如果手牌中沒有這張牌則跳過
+        if (temp_hand.cards.find(org_letter) == string::npos) {
+            continue;
+        }
         for (char new_letter = 'A'; new_letter <= 'Z'; new_letter++) {
-            if (temp_hand.cards.find(org_letter) != string::npos) {
-                temp_hand.replace(org_letter, new_letter);
-                if (tsumouable(temp_hand)) {
-                    reachable_cards.push_back({org_letter, new_letter});
+            temp_hand.replace(org_letter, new_letter);
+            if (tsumouable(temp_hand)) {
+                if (reachable_cards.empty() || reachable_cards.back().first != org_letter) {
+                    reachable_cards.emplace_back(org_letter, string(1, new_letter));
                 }
-                temp_hand.replace(new_letter, org_letter);
+                else {
+                    reachable_cards.back().second += new_letter;
+                }
             }
+            temp_hand.replace(new_letter, org_letter);
         }
     }
-    
+
     return {!reachable_cards.empty(), reachable_cards};
 }
 

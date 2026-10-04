@@ -56,6 +56,6 @@ public:
     bool ponable();      // 可碰
     bool kanable();      // 可槓
     bool ronable();      // 可和
-    std::pair<bool, std::vector<std::pair<char, char>>> reachable();     // pair<可立直, pair<捨牌, 聽牌>>
+    std::pair<bool, std::vector<std::pair<char, std::string>>> reachable();     // pair<可立直, pair<捨牌, 聽牌>>
     bool tsumouable(CardSet card_set = CardSet());                       // 可自摸
 };
