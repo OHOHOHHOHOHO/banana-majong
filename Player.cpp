@@ -155,19 +155,31 @@ char Player::tsumo() {
     return '0'; // 這裡應該要有自摸的邏輯，但目前還沒實作
 }
 
-bool Player::chiiable() {
+bool Player::chiiable(char buffer_card) {
+    if (buffer_card == '.') {
+        throw std::invalid_argument("[ERROR] Missing buffer_card parameter for Player::chiiable.");
+    }
     return false;
 }
 
-bool Player::ponable() {
+bool Player::ponable(char buffer_card) {
+    if (buffer_card == '.') {
+        throw std::invalid_argument("[ERROR] Missing buffer_card parameter for Player::ponable.");
+    }
     return false;
 }
 
-bool Player::kanable() {
+bool Player::kanable(char buffer_card) {
+    if (buffer_card == '.') {
+        throw std::invalid_argument("[ERROR] Missing buffer_card parameter for Player::kanable.");
+    }
     return false;
 }
 
-bool Player::ronable() {
+bool Player::ronable(char buffer_card) {
+    if (buffer_card == '.') {
+        throw std::invalid_argument("[ERROR] Missing buffer_card parameter for Player::ronable.");
+    }
     return false;
 }
 
