@@ -20,6 +20,9 @@ public:
     // 發牌給所有玩家
     void distribute();
 
+    // 檢查是否可鳴牌
+    void check_naki(int player_index, char buffer_card);
+
     // 遊戲開始
     void start();
 };

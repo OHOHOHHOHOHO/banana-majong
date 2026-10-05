@@ -14,6 +14,10 @@ void GameManager::distribute() {
     }
 }
 
+void GameManager::check_naki(int player_index, char buffer_card) {
+    // 這裡應該要有鳴牌的邏輯，但目前還沒實作
+}
+
 void GameManager::start() {
     while (stage != 2) {
         Player &rec_player = players[order];    // 當前進行動作的玩家
@@ -26,6 +30,8 @@ void GameManager::start() {
         cout << "After action, your hand: " << rec_player.hand.cards << "\n\n\n\n";
         
         stage = 1;
+        check_naki((order + 1) % players.size(), card_buffer);
+
         order = (order + 1) % players.size();
         stage = 0;
     }
