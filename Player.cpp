@@ -58,14 +58,14 @@ void Player::take(CardMountain &mountain, int count) {
 }
 
 char Player::action_choose() {
-    const string actions = "cpkrttd";                                                                                     // 動作代碼
-    const string actions_chinese[7] = {"吃", "碰", "槓", "立直", "自摸", "和", "丟牌"};                                     // 中文動作名稱
-    bool is_action_available[7] = {chiiable(), ponable(), kanable(), reachable().first, tsumouable(), ronable(), true};   // 動作可行性判定
+    const string actions = "krtd";                                                       // 動作代碼
+    const string actions_chinese[4] = {"暗槓", "立直", "自摸", "丟牌"};                   // 中文動作名稱
+    bool is_action_available[4] = {kanable('@'), reachable().first, tsumouable(), true};   // 動作可行性判定
 
     string message = "";               // 用於告知可行動作的訊息
     string available_actions = "";     // 用於存儲可行動作的代碼
 
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 4; i++) {
         if (is_action_available[i]) {
             message += (message.empty() ? "" : "、") + actions_chinese[i] + "(" + actions[i] + ")";
             available_actions += actions[i];
@@ -101,15 +101,52 @@ char Player::action_choose() {
     return thrown_card;
 }
 
-void Player::action_check() {
-    /*
-        check:
-        吃
-        碰
-        槓
-        立直
-        和
-    */
+char Player::naki_action_ask(char buffer_card) {
+    if (buffer_card == '.') {
+        throw std::invalid_argument("[ERROR] Missing buffer_card parameter for Player::naki_action_ask.");
+    }
+    if (status != 0) {
+        return 'd';                    // 如果玩家已經立直或和牌，則不能鳴牌，直接回傳'd'
+    }
+
+    const string actions = "cpktd";                                                      // 動作代碼
+    const string actions_chinese[5] = {"吃", "碰", "槓", "和", "取消"};                   // 中文動作名稱
+    bool is_action_available[5] = {chiiable(buffer_card), ponable(buffer_card), kanable(buffer_card), ronable(buffer_card), true};   // 動作可行性判定
+
+    string message = "";               // 用於告知可行動作的訊息
+    string available_actions = "";     // 用於存儲可行動作的代碼
+
+    for (int i = 0; i < 5; i++) {
+        if (is_action_available[i]) {
+            message += (message.empty() ? "" : "、") + actions_chinese[i] + "(" + actions[i] + ")";
+            available_actions += actions[i];
+        }
+    }
+
+    if (available_actions == "d") {
+        return 'd';                     // 如果沒有鳴牌動作可行，直接回傳'd'
+    }
+    
+    cout << "你可以：" << message << "\n";
+
+    char input;
+    do {
+            cout << "選擇你要執行的動作代碼：";
+            cin >> input;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            input = tolower(input);
+            if (actions.find(input) == string::npos) {
+                cout << "Invalid action!\n";
+            }
+            else if (available_actions.find(input) == string::npos) {
+                cout << "You cannot do that action!\n";
+            }
+            else {
+                break;
+            }
+        } while (true);    
+    
+    return input;
 }
 
 char Player::throw_card() {
@@ -159,6 +196,9 @@ bool Player::chiiable(char buffer_card) {
     if (buffer_card == '.') {
         throw std::invalid_argument("[ERROR] Missing buffer_card parameter for Player::chiiable.");
     }
+
+    // 這裡應該要有吃牌的判斷邏輯，但目前還沒實作
+    
     return false;
 }
 
@@ -166,6 +206,9 @@ bool Player::ponable(char buffer_card) {
     if (buffer_card == '.') {
         throw std::invalid_argument("[ERROR] Missing buffer_card parameter for Player::ponable.");
     }
+    
+    // 這裡應該要有碰牌的判斷邏輯，但目前還沒實作
+    
     return false;
 }
 
@@ -173,6 +216,9 @@ bool Player::kanable(char buffer_card) {
     if (buffer_card == '.') {
         throw std::invalid_argument("[ERROR] Missing buffer_card parameter for Player::kanable.");
     }
+
+    // 這裡應該要有槓牌和暗槓的判斷邏輯，但目前還沒實作
+    
     return false;
 }
 
@@ -180,6 +226,9 @@ bool Player::ronable(char buffer_card) {
     if (buffer_card == '.') {
         throw std::invalid_argument("[ERROR] Missing buffer_card parameter for Player::ronable.");
     }
+
+    // 這裡應該要有和牌的判斷邏輯與振聽的檢查邏輯，但目前還沒實作
+
     return false;
 }
 

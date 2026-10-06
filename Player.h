@@ -36,11 +36,11 @@ public:
     // 從牌山拿牌
     void take(CardMountain &mountain, int count = 1);
     
-    // 讓玩家選擇動作
+    // 摸牌後讓玩家選擇動作，回傳丟出的牌(和牌則回傳'0')
     char action_choose();
     
-    // 動作檢查
-    void action_check();
+    // 詢問玩家的鳴牌意願，回傳期望的鳴牌動作代碼
+    char naki_action_ask(char buffer_card = '.');
     
     // 讓玩家輸入要丟的牌並從手牌中移除該牌，回傳丟出的牌
     char throw_card();
@@ -54,7 +54,7 @@ public:
 
     bool chiiable(char buffer_card = '.');     // 可吃
     bool ponable(char buffer_card = '.');      // 可碰
-    bool kanable(char buffer_card = '.');      // 可槓
+    bool kanable(char buffer_card = '.');      // 可槓(輸入為'@'則檢查暗槓)
     bool ronable(char buffer_card = '.');      // 可和
     std::pair<bool, std::vector<std::pair<char, std::string>>> reachable();     // pair<可立直, pair<捨牌, 聽牌>>
     bool tsumouable(CardSet card_set = CardSet());                       // 可自摸
