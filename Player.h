@@ -58,7 +58,7 @@ public:
 
     bool chiiable(char buffer_card = '.');     // 可吃
     bool ponable(char buffer_card = '.');      // 可碰
-    bool kanable(char buffer_card = '.');      // 可槓(輸入為'@'則檢查暗槓)
+    std::pair<bool, std::string> kanable(char buffer_card = '.');      // 可槓(輸入為'@'則檢查暗槓)
     bool ronable(char buffer_card = '.');      // 可和
     std::pair<bool, std::vector<std::pair<char, std::string>>> reachable();     // pair<可立直, pair<捨牌, 聽牌>>
     bool tsumouable(CardSet card_set = CardSet());                       // 可自摸
