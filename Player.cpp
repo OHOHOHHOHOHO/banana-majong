@@ -58,10 +58,11 @@ void Player::take(CardMountain &mountain, int count) {
     hand.add(mountain.pop(count), 'b');
 }
 
+
 char Player::action_choose() {
     const string actions = "krtd";                                                       // 動作代碼
     const string actions_chinese[4] = {"暗槓", "立直", "自摸", "丟牌"};                   // 中文動作名稱
-    bool is_action_available[4] = {kanable('@'), reachable().first, tsumouable(), true};   // 動作可行性判定
+    bool is_action_available[4] = {kanable('@').first, reachable().first, tsumouable(), true};   // 動作可行性判定
 
     string message = "";               // 用於告知可行動作的訊息
     string available_actions = "";     // 用於存儲可行動作的代碼
@@ -96,10 +97,24 @@ char Player::action_choose() {
         } while (true);
     }
     
-    char thrown_card = execute_action(input);   // 執行動作，並取得丟出的牌
+    char thrown_card;
+    switch (input) {
+        case 'k': {
+            thrown_card = execute_action('k', kanable('@').second);
+            break;
+        }
+        case 'r': {
+            thrown_card = execute_action('r', reachable().second);
+            break;
+        }
+        default:
+            thrown_card = execute_action(input);
+            break;
+    }
     hand.sort();
     return thrown_card;
 }
+
 
 char Player::naki_action_ask(char buffer_card) {
     if (buffer_card == '.') {
@@ -111,7 +126,7 @@ char Player::naki_action_ask(char buffer_card) {
 
     const string actions = "cpktd";                                                      // 動作代碼
     const string actions_chinese[5] = {"吃", "碰", "槓", "和", "取消"};                   // 中文動作名稱
-    bool is_action_available[5] = {chiiable(buffer_card), ponable(buffer_card), kanable(buffer_card), ronable(buffer_card), true};   // 動作可行性判定
+    bool is_action_available[5] = {chiiable(buffer_card), ponable(buffer_card), kanable(buffer_card).first, ronable(buffer_card), true};   // 動作可行性判定
 
     string message = "";               // 用於告知可行動作的訊息
     string available_actions = "";     // 用於存儲可行動作的代碼
@@ -182,7 +197,7 @@ char Player::ron_nya() {
     return '0'; // 這裡應該要有和牌的邏輯，但目前還沒實作
 }
 
-char Player::reach(std::vector<std::pair<char, std::string>> reachable_cards) {
+char Player::reach(vector<pair<char, string>> reachable_cards) {
     return ' '; // 這裡應該要有立直的邏輯，但目前還沒實作
 }
 
@@ -210,14 +225,14 @@ bool Player::ponable(char buffer_card) {
     return false;
 }
 
-bool Player::kanable(char buffer_card) {
+std::pair<bool, std::string> Player::kanable(char buffer_card) {
     if (buffer_card == '.') {
         throw std::invalid_argument("[ERROR] Missing buffer_card parameter for Player::kanable.");
     }
 
     // 這裡應該要有槓牌和暗槓的判斷邏輯，但目前還沒實作
     
-    return false;
+    return {false, ""};
 }
 
 bool Player::ronable(char buffer_card) {
@@ -229,6 +244,7 @@ bool Player::ronable(char buffer_card) {
 
     return false;
 }
+
 
 pair<bool, vector<pair<char, string>>> Player::reachable() {
     CardSet temp_hand = hand;                      // 用於測試的手牌副本
@@ -260,6 +276,7 @@ pair<bool, vector<pair<char, string>>> Player::reachable() {
 
     return {!reachable_cards.empty(), reachable_cards};
 }
+
 
 bool Player::tsumouable(CardSet card_set) {
     if (card_set.length() == 0) {
