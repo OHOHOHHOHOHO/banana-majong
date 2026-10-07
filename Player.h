@@ -4,12 +4,16 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <variant>
 
 // 玩家。包含名稱、位置、分數、狀態、手牌、副露、牌河。該類別提供了初始化玩家、抽牌、動作檢查以及各種動作（吃、碰、槓、立直、自摸、丟牌）的功能。
 class Player {
 private:
+    // 定義一個空結構，代表不需要傳參的動作（如 pon, chii 等）
+    struct NoArgs {};
+    using ActionParam = std::variant<NoArgs, std::string, std::vector<std::pair<char, std::string>>>;
     // 啟動吃,碰,槓,立,和(摸),丟的操作執行函數，並回傳丟出的牌(和牌則回傳0)
-    char execute_action(char action);
+    char execute_action(char action, ActionParam param = Player::NoArgs{});
 
 public:
     std::string name;   // 玩家名稱
@@ -47,9 +51,9 @@ public:
 
     char chii();     // 吃(回傳吃完丟的牌)
     char pon();      // 碰(回傳碰完丟的牌)
-    char kan();      // 槓(回傳槓完丟的牌)
+    char kan(std::string kanable_cards);      // 槓(回傳槓完丟的牌)
     char ron_nya();  // 和(回傳'0')
-    char reach();    // 立直(回傳丟的牌)
+    char reach(std::vector<std::pair<char, std::string>> reachable_cards);    // 立直(回傳丟的牌)
     char tsumo();    // 自摸(回傳'0')
 
     bool chiiable(char buffer_card = '.');     // 可吃

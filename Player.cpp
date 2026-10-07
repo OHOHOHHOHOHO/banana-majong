@@ -4,21 +4,22 @@
 #include <algorithm>
 #include <stdexcept>
 #include <limits>
+#include <utility>
 
 using namespace std;
 
 
 // Private
-char Player::execute_action(char action) {
+char Player::execute_action(char action, ActionParam param) {
     switch (action) {
         case 'c':
             return chii();
         case 'p':
             return pon();
         case 'k':
-            return kan();
+            return kan(get<string>(param));
         case 'r':
-            return reach();
+            return reach(get<std::vector<std::pair<char, std::string>>>(param));
         case 't':
             return tsumo();
         case 'd':
@@ -73,7 +74,6 @@ char Player::action_choose() {
     }
 
     cout << "你可以：" << (available_actions == "d" ? "丟牌" : message) << "\n";
-
     char input;
     if (available_actions == "d") {
         input = 'd';
@@ -122,13 +122,11 @@ char Player::naki_action_ask(char buffer_card) {
             available_actions += actions[i];
         }
     }
-
     if (available_actions == "d") {
         return 'd';                     // 如果沒有鳴牌動作可行，直接回傳'd'
     }
     
     cout << "你可以：" << message << "\n";
-
     char input;
     do {
             cout << "選擇你要執行的動作代碼：";
@@ -176,7 +174,7 @@ char Player::pon() {
     return ' '; // 這裡應該要有碰牌的邏輯，但目前還沒實作
 }
 
-char Player::kan() {
+char Player::kan(string kanable_cards) {
     return ' '; // 這裡應該要有槓牌的邏輯，但目前還沒實作
 }
 
@@ -184,7 +182,7 @@ char Player::ron_nya() {
     return '0'; // 這裡應該要有和牌的邏輯，但目前還沒實作
 }
 
-char Player::reach() {
+char Player::reach(std::vector<std::pair<char, std::string>> reachable_cards) {
     return ' '; // 這裡應該要有立直的邏輯，但目前還沒實作
 }
 
