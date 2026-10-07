@@ -7,6 +7,10 @@
 #include <stdexcept>
 #include <limits>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "CardSet.h"
 #include "CardMountain.h"
 #include "Player.h"
@@ -52,6 +56,9 @@ int ask_num_of_player() {
 
 
 int main() {
+#ifdef _WIN32
+SetConsoleOutputCP(65001);   // 強制設定主控台輸出編碼為 UTF-8 (Code Page 65001)
+#endif
 try {
     CardMountain mountain;
 
