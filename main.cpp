@@ -30,8 +30,8 @@ const string original_mountain = []() {               // 建立原始牌山，�
     return mountain;
 }();
 
-
-int ask_num_of_player() {                             // 詢問遊戲人數
+// 詢問遊戲人數
+int ask_num_of_player() {
     int num;
     while (true) {
         cout << "Enter the number of players (2-6): ";
@@ -55,9 +55,9 @@ int main() {
 try {
     CardMountain mountain;
 
-    int num_players = ask_num_of_player();
+    int num_players = ask_num_of_player();          // 遊戲人數
 
-    vector <Player> players;
+    vector <Player> players;                        // 玩家列表
 
     for (int i = 0; i < num_players; i++) {
         string name = "Player" + to_string(i + 1);

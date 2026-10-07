@@ -2,7 +2,7 @@
 
 using namespace std;
 
-GameManager::GameManager(CardMountain &_mountain, vector<Player> &_players){
+GameManager::GameManager(CardMountain &_mountain, vector<Player> &_players) {
     mountain = _mountain;
     players = _players;
 }
@@ -14,14 +14,24 @@ void GameManager::distribute() {
     }
 }
 
+void GameManager::check_naki(int player_index, char buffer_card) {
+    // 這裡應該要有鳴牌的邏輯，但目前還沒實作
+}
+
 void GameManager::start() {
-    while(stage != 2){
-        Player &rec_player = players[order];
+    while (stage != 2) {
+        Player &rec_player = players[order];    // 當前進行動作的玩家
         rec_player.take(mountain, 1);
+        
         rec_player.display_hand();
         cout << "Dora: " << mountain.get_dora() << "      Cards left: " << mountain.main.length() << "\n\n";
-        rec_player.action_choose();
+        card_buffer = rec_player.action_choose();
+        cout << "You threw: " << card_buffer << "\n";
+        cout << "After action, your hand: " << rec_player.hand.cards << "\n\n\n\n";
+        
         stage = 1;
+        check_naki((order + 1) % players.size(), card_buffer);
+
         order = (order + 1) % players.size();
         stage = 0;
     }
