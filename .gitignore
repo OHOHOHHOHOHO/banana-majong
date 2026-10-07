@@ -3,3 +3,4 @@ w64devkit/
 *.exe
 *.cs
 *.o
+build.bat
