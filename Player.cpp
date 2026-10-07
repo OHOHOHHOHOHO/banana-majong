@@ -179,7 +179,7 @@ char Player::kan(string kanable_cards) {
 }
 
 char Player::ron_nya() {
-    return '0'; // 這裡應該要有和牌的邏輯，但目前還沒實作
+    return '1'; // 這裡應該要有和牌的邏輯，但目前還沒實作
 }
 
 char Player::reach(std::vector<std::pair<char, std::string>> reachable_cards) {
@@ -187,7 +187,7 @@ char Player::reach(std::vector<std::pair<char, std::string>> reachable_cards) {
 }
 
 char Player::tsumo() {
-    return '0'; // 這裡應該要有自摸的邏輯，但目前還沒實作
+    return '1'; // 這裡應該要有自摸的邏輯，但目前還沒實作
 }
 
 bool Player::chiiable(char buffer_card) {

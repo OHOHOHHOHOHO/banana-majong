@@ -52,9 +52,9 @@ public:
     char chii();     // 吃(回傳吃完丟的牌)
     char pon();      // 碰(回傳碰完丟的牌)
     char kan(std::string kanable_cards);      // 槓(回傳槓完丟的牌)
-    char ron_nya();  // 和(回傳'0')
+    char ron_nya();  // 和(回傳'1')
     char reach(std::vector<std::pair<char, std::string>> reachable_cards);    // 立直(回傳丟的牌)
-    char tsumo();    // 自摸(回傳'0')
+    char tsumo();    // 自摸(回傳'1')
 
     bool chiiable(char buffer_card = '.');     // 可吃
     bool ponable(char buffer_card = '.');      // 可碰
